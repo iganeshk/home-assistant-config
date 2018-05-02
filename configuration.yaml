@@ -1,0 +1,414 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: "K.O.T.L" # Keep Of The Light
+  
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret location_lat
+  longitude: !secret location_long
+  
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 0
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/New_York
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+# introduction:
+
+# CustomUI Auto Install YAML
+# customizer:
+#   custom_ui: local
+
+# Enables the frontend
+frontend:
+  extra_html_url:
+    - /local/custom_ui/state-card-custom-ui.html
+  extra_html_url_es5:
+    - /local/custom_ui/state-card-custom-ui-es5.html  
+  themes:
+    happy:
+      primary-color: pink
+    sad:
+      primary-color: blue
+    night:
+      primary-color: darkred
+
+# Enables configuration UI
+config:
+logger:
+http:
+  api_password: !secret ha_pass
+  # Secrets are defined in the file secrets.yaml
+  # api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  base_url: 192.168.1.116:8123
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+# discovery:
+# hassio: 
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+device_tracker:
+  - platform: owntracks_http
+  - platform: ubus
+    host: !secret 3200acm
+    username: !secret 3200acm_user
+    password: !secret 3200acm_pass
+    #dhcp_software: dnsmasq
+    track_new_devices: yes
+# Enables support for tracking state changes over time
+# history:
+
+# View all events in a logbook
+# logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Weather prediction
+# sensor:
+#   - platform: yr
+
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud ( $5 DOLLAH PA MONTH?)
+# cloud:
+
+# Google Assistant API
+google_assistant:
+  project_id: !secret ga_project_id
+  client_id: !secret ga_client_id
+  access_token: !secret ga_access
+  agent_user_id: !secret ga_agent
+  api_key: !secret ga_api
+  expose_by_default: true
+  exposed_domains:
+    - switch
+    - light
+    - script
+    # - scene
+    # - group
+
+mqtt:
+  broker: localhost
+  port: 1883
+  client_id: hassio
+  username: !secret mqtt_broker_user
+  password: !secret mqtt_broker_pass
+
+shell_command:
+  ##shutdown_legion: "net rpc shutdown -f -t time -C 'message' -U username%password -I ip_address"
+  shutdown_legion: !secret cobalt-60-rpc-down
+
+switch:
+    #########################
+    # iSelectors - pyTua Api
+    #########################
+  - platform: tuya
+    name: jinvoo_1
+    host: 192.168.1.223
+    local_key: !secret jinvoo1_key
+    device_id: !secret jinvoo1_id
+    # id: 0
+  - platform: tuya
+    name: jinvoo_2
+    host: 192.168.1.249
+    local_key: !secret jinvoo2_key
+    device_id: !secret jinvoo2_id
+    ###############
+    # SonOffs
+    ###############
+  - platform: mqtt
+    name: sonoff_s20_1
+    state_topic: stat/sonoff_s20_1/POWER
+    command_topic: cmnd/sonoff_s20_1/POWER
+    # availability_topic: stat/sonoff_s20_1/POWER
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+  - platform: mqtt
+    name: sonoff_s31_1
+    state_topic: stat/sonoff_s31_1/POWER
+    command_topic: cmnd/sonoff_s31_1/POWER   
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+  - platform: mqtt
+    name: sonoff_s31_2
+    state_topic: stat/sonoff_s31_2/POWER
+    command_topic: cmnd/sonoff_s31_2/POWER
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+    ###############
+    # Workstation
+    ###############
+  - platform: wake_on_lan
+    name: legion
+    scan_interval: 5
+    mac_address: "1c-1b-0d-0b-ea-c1"
+    host: 192.168.1.100
+    turn_off:
+        service: shell_command.shutdown_legion
+
+light:
+  - platform: flux_led
+    devices:
+      192.168.1.235:
+        name: "desk light"
+        mode: "rgb"
+  - platform: mqtt_json  
+    name: "sensornode1_rgb"  
+    state_topic: "cyfi/sensornode1"  
+    command_topic: "cyfi/sensornode1/set"  
+    brightness: true  
+    flash: true  
+    rgb: true  
+    optimistic: false  
+    qos: 0 
+  - platform: mqtt_json  
+    name: "sensornode2_rgb"  
+    state_topic: "cyfi/sensornode2"  
+    command_topic: "cyfi/sensornode2/set"  
+    brightness: true  
+    flash: true  
+    rgb: true  
+    optimistic: false  
+    qos: 0 
+
+sensor:
+  ###################  
+  # Sensor Node - 1
+  ###################
+  - platform: mqtt
+    state_topic: "cyfi/sensornode1"
+    name: "sensornode1_temperature"
+    unit_of_measurement: "°C"
+    value_template: '{{ value_json.temperature | round(1) }}'
+  - platform: mqtt  
+    state_topic: "cyfi/sensornode1"  
+    name: "sensornode1_humidity"  
+    unit_of_measurement: "%"  
+    value_template: '{{ value_json.humidity | round(1) }}'  
+  - platform: mqtt  
+    state_topic: "cyfi/sensornode1"  
+    name: "sensornode1_LDR"
+    # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
+    unit_of_measurement: "Lux"  
+    value_template: '{{ value_json.ldr }}'
+  - platform: mqtt  
+    state_topic: "cyfi/sensornode1"  
+    name: "sensornode1_motion"    
+    value_template: '{{ value_json.motion }}'  
+  - platform: mqtt
+    state_topic: "cyfi/sensornode1"
+    name: "sensornode1_feelslike"
+    unit_of_measurement: "°C"
+    value_template: '{{ value_json.heatIndex | round(1) }}'
+  ###################  
+  # Sensor Node - 2
+  ###################
+  - platform: mqtt
+    state_topic: "cyfi/sensornode2"
+    name: "sensornode2_temperature"
+    unit_of_measurement: "°C"
+    value_template: '{{ value_json.temperature | round(1) }}'
+  - platform: mqtt  
+    state_topic: "cyfi/sensornode2"  
+    name: "sensornode2_humidity"  
+    unit_of_measurement: "%"  
+    value_template: '{{ value_json.humidity | round(1) }}'  
+  - platform: mqtt  
+    state_topic: "cyfi/sensornode2"  
+    name: "sensornode2_LDR"
+    # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
+    unit_of_measurement: "Lux"  
+    value_template: '{{ value_json.ldr }}'
+  - platform: mqtt  
+    state_topic: "cyfi/sensornode2"  
+    name: "sensornode2_motion"    
+    value_template: '{{ value_json.motion }}'
+  - platform: mqtt
+    state_topic: "cyfi/sensornode2"
+    name: "sensornode2_feelslike"
+    unit_of_measurement: "°C"
+    value_template: '{{ value_json.heatIndex | round(1) }}'
+  ###################  
+  # SonOff - S31 - 1  
+  ###################
+  - platform: mqtt
+    state_topic: "tele/sonoff_s31_1/SENSOR"
+    name: "sonoff_s31_1_sensor_voltage"
+    unit_of_measurement: "V"
+    value_template: "{{value_json['ENERGY'].Voltage }}"
+  - platform: mqtt
+    state_topic: "tele/sonoff_s31_1/SENSOR"
+    name: "sonoff_s31_1_sensor_current"
+    unit_of_measurement: "A"
+    value_template: "{{value_json['ENERGY'].Current }}"
+  - platform: mqtt
+    state_topic: "tele/sonoff_s31_1/SENSOR"
+    name: "sonoff_s31_1_sensor_power"
+    unit_of_measurement: "W"
+    value_template: "{{value_json['ENERGY'].Power }}"
+  - platform: mqtt
+    state_topic: "tele/sonoff_s31_1/SENSOR"
+    name: "sonoff_s31_1_sensor_today"
+    unit_of_measurement: "kWh"
+    value_template: "{{value_json['ENERGY'].Today }}"
+  - platform: mqtt
+    state_topic: "tele/sonoff_s31_1/SENSOR"
+    name: "sonoff_s31_1_sensor_total"
+    unit_of_measurement: "kWh"
+    value_template: "{{value_json['ENERGY'].Total }}"
+  ###################  
+  # SonOff - S31 - 2  
+  ###################
+  - platform: mqtt
+    state_topic: "tele/sonoff_s31_2/SENSOR"
+    name: "sonoff_s31_2_sensor_voltage"
+    unit_of_measurement: "V"
+    value_template: "{{value_json['ENERGY'].Voltage }}"
+  - platform: mqtt
+    state_topic: "tele/sonoff_s31_2/SENSOR"
+    name: "sonoff_s31_2_sensor_current"
+    unit_of_measurement: "A"
+    value_template: "{{value_json['ENERGY'].Current }}"
+  - platform: mqtt
+    state_topic: "tele/sonoff_s31_2/SENSOR"
+    name: "sonoff_s31_2_sensor_power"
+    unit_of_measurement: "W"
+    value_template: "{{value_json['ENERGY'].Power }}"
+  - platform: mqtt
+    state_topic: "tele/sonoff_s31_2/SENSOR"
+    name: "sonoff_s31_2_sensor_today"
+    unit_of_measurement: "kWh"
+    value_template: "{{value_json['ENERGY'].Today }}"
+  - platform: mqtt
+    state_topic: "tele/sonoff_s31_2/SENSOR"
+    name: "sonoff_s31_2_sensor_total"
+    unit_of_measurement: "kWh"
+    value_template: "{{value_json['ENERGY'].Total }}"
+  #################  
+  # NanoPi Status  
+  #################
+  - platform: command_line
+    name: nanopi_temps
+    scan_interval: 10    
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    unit_of_measurement: "°C"
+    value_template: '{{ value | multiply(0.001) | round(1) }}'
+  - platform: command_line
+    scan_interval: 10 
+    name: nanopi_memory_usage
+    command: free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }'
+    value_template: '{{ value }}'
+  - platform: command_line
+    name: nanopi_disk_usage
+    command: df -h | awk '$NF=="/"{printf "%.2f/%.2fGB (%s)\n", $3,$2,$5}'
+    value_template: '{{ value }}'
+  - platform: command_line
+    name: nanopi_network_usage
+    scan_interval: 3    
+    command: "bash /home/hassio/eth0_network_usage.sh"
+    value_template: '{{ value }}'
+  - platform: command_line
+    name: nanopi_cpu_speed
+    scan_interval: 3    
+    command: cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+    # command: cat /home/hassio/homeassistant/cpu_freq_report.txt
+    unit_of_measurement: "GHz"
+    value_template: '{{ value | multiply(0.00000249999) | round(2) }}' # fix CPU Freq readout for NanoPi Neo Plus2
+  - platform: command_line
+    name: nanopi_cpu_usage
+    scan_interval: 5    
+    # command: "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage "%"}'"
+    command: top -bn1 | grep load | awk '{printf "%.2f\n", $(NF-2)}'
+    value_template: '{{ value }}'
+  - platform: command_line
+    name: server_uptime
+    # command: uptime | awk -F, '{sub(".*up ",x,$1);print $1}'
+    command: "python /home/hassio/uptime.py"
+  # - platform: command_line
+  - platform: uptime
+    name: ha_uptime
+    unit_of_measurement: hours
+    # command: /usr/sbin/service hass-daemon status | awk 'NR==3{print $9" " $10}'
+    # value_template: '{{ value }}'    
+  - platform: time_date
+    display_options:
+      - time
+## TEMPLATE SENSORS      
+  - platform: template
+    sensors:
+      sensornode1_motion_status:
+        value_template: >-
+          {% if is_state('sensor.sensornode1_motion', 'standby') %}
+            Clear
+          {% else %}
+            Detected
+          {% endif %}        
+        icon_template: >-
+          {% if is_state("sensor.sensornode1_motion", "standby") %}
+          mdi:walk
+          {% else %}
+          mdi:run-fast
+          {% endif %}
+  - platform: template
+    sensors:
+      sensornode2_motion_status:
+        value_template: >-
+          {% if is_state('sensor.sensornode1_motion', 'standby') %}
+            Clear
+          {% else %}
+            Detected
+          {% endif %}        
+        icon_template: >-
+          {% if is_state("sensor.sensornode1_motion", "standby") %}
+          mdi:walk
+          {% else %}
+          mdi:run-fast
+          {% endif %}
+# OTHER DEVICES
+media_player:
+  - platform: cast
+    host: 192.168.1.139
+
+# camera:
+#   - platform: ffmpeg
+#     input: !secret cam1
+  # - platform: onvif
+  #   host: 192.168.1.200
+  #   port: 554
+  #   username: !secret cam1_user
+  #   password: !secret cam1_pass
+  #   name: "Monitor 1"
+
+
+#############################################
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+zone: !include zones.yaml

@@ -1,0 +1,217 @@
+flash_node1:
+  alias: flash_sensor1_light
+  sequence:
+    - alias: Sensor 1 Light On
+      service: light.turn_on
+      data:
+        entity_id: light.sensornode1_rgb
+        # rgb_color: [255,0,0]
+        color_name: red
+    - delay:
+        # time for flash light on
+        seconds: 1
+    - alias: Sensor 2 Light off
+      service: light.turn_off
+      data:
+        entity_id: light.sensornode1_rgb
+    - delay:
+        # time for flash light off
+        seconds: 1
+    - alias: loop_room1
+      service: script.turn_on
+      data:
+        entity_id: script.flash_room1
+study_it:
+  alias: "Study Time"
+  sequence:
+    - service: switch.turn_on
+      entity_id: switch.sonoff_s20_1
+    - service: switch.turn_off
+      entity_id: switch.jinvoo_1
+    - service: switch.turn_off
+      entity_id: switch.jinvoo_2
+    - service: light.turn_off
+      entity_id: light.desk_light
+movie_it:
+  alias: "Movies"
+  sequence:
+    # - service: light.turn_on
+    #   data:
+    #     entity_id: light.desk_light
+    #     # rgb_color: [255,0,0]
+    #     # color_name: red
+    #     # brightness: 100
+    #     effect: blue_strobe
+    # - delay:
+    #     # time for flash light on
+    #     milliseconds: 50
+    - service: switch.turn_off
+      entity_id: switch.sonoff_s20_1
+    - service: switch.turn_on
+      entity_id: switch.jinvoo_1
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [242, 230, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [229, 204, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [215, 179, 255]
+    - service: light.turn_on        
+      data:
+        entity_id: light.desk_light
+        rgb_color: [201, 153, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [187, 128, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [173, 102, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [160, 77, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [146, 51, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [133, 26, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [119, 0, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [107, 0, 230]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [95, 0, 204]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [107, 0, 230]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [119, 0, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [133, 26, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [146, 51, 255]        
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [160, 77, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [173, 102, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [187, 128, 255]
+    - service: light.turn_on        
+      data:
+        entity_id: light.desk_light
+        rgb_color: [201, 153, 255] 
+    - service: light.turn_on        
+      data:
+        entity_id: light.desk_light
+        rgb_color: [201, 153, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [215, 179, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [229, 204, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        rgb_color: [242, 230, 255]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        color_name: darkblue
+        brightness: 10
+    # - service: light.turn_off
+    #   entity_id: light.desk_light
+
+game_it:
+  alias: "Game Night"
+  sequence:
+    - service: switch.turn_on
+      entity_id: switch.jinvoo_2
+    - service: switch.turn_off
+      entity_id: switch.sonoff_s20_1
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        color_name: blue
+        brightness: 100        
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        color_name: purple
+        brightness: 100
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        color_name: white
+        brightness: 100        
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        color_name: yellow
+        brightness: 100        
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        color_name: pink
+        brightness: 100        
+    # - service: light.turn_on
+    #   data:
+    #     entity_id: light.desk_light
+    #     rgb_color: [255, 216, 204]
+    # - service: light.turn_on
+    #   data:
+    #     entity_id: light.desk_light
+    #     rgb_color: [255, 157, 128]
+    # - service: light.turn_on
+    #   data:
+    #     entity_id: light.desk_light
+    #     rgb_color: [255, 60, 0]
+    # - service: light.turn_on
+    #   data:
+    #     entity_id: light.desk_light
+    #     rgb_color: [230, 54, 0]
+    # - service: light.turn_on
+    #   data:
+    #     entity_id: light.desk_light
+    #     rgb_color: [204, 48, 0]
+    # - service: light.turn_on
+    #   data:
+    #     entity_id: light.desk_light
+    #     rgb_color: [255, 64, 0]
+    - service: light.turn_on
+      data:
+        entity_id: light.desk_light
+        color_name: darkred
+        brightness: 100
+        transition: 4

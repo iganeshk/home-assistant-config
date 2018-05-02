@@ -1,0 +1,15 @@
+# - name: "Game Night"
+#   entities:
+#     light.desk_light:
+#       state: on
+#       color_name: purple
+#       brightness: 75
+#       transition: 5
+#     switch.sonoff_s20_1:
+#       state: off
+# - name: "Movies"
+#   entities:
+#     light.desk_light:
+#       state: off
+#     switch.sonoff_s20_1:
+#       state: off

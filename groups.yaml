@@ -1,0 +1,121 @@
+default_view:
+  view: yes
+  icon: mdi:home
+  entities:
+    - group.people    
+    - group.home
+    # - group.living_room
+    # - group.bedroom
+    - group.workstation
+    - group.system_monitor
+living:
+  view: yes
+  icon: mdi:sofa
+  entities:
+    - group.living_room
+bed:
+  view: yes
+  icon: mdi:hotel
+  entities:
+    - group.bedroom
+system:
+  view: yes
+  icon: mdi:home-automation
+  entities:
+    - group.system_monitor
+school:
+  view: yes
+  icon: mdi:school  
+  entities:
+    - group.class
+all:
+  view: yes
+  icon: mdi:store
+  entities:
+    - group.people    
+    - group.home
+    - group.living_room
+    - group.bedroom
+    - group.workstation
+    - group.system_monitor    
+people:
+  control: hidden
+  icon: mdi:account-multiple
+  name: "People"
+  entities:
+    - device_tracker.ganesh_s8plus
+    - device_tracker.anirudh_iphone
+    - device_tracker.ram_note
+home:  
+  control: hidden
+  icon: mdi:home
+  name: "Home"
+  entities:
+    - sensor.sensornode1_feelslike    
+    - sensor.sensornode1_temperature
+    - sensor.sensornode1_humidity
+    - sensor.sensornode1_LDR    
+    # - sensor.sensornode1_motion
+    - sensor.sensornode1_motion_status
+    - light.sensornode1_rgb
+    - camera.ffmpeg
+class:  
+  control: hidden
+  name: "Class - Sensor Node"
+  entities:
+    - sensor.sensornode2_feelslike    
+    - sensor.sensornode2_temperature
+    - sensor.sensornode2_humidity
+    - sensor.sensornode2_LDR    
+    # - sensor.sensornode2_motion
+    - sensor.sensornode2_motion_status
+    - light.sensornode2_rgb
+
+living_room:
+  control: hidden
+  icon: mdi:sofa
+  name: "Living Room"
+  entities:
+    - switch.sonoff_s31_1
+    - sensor.sonoff_s31_1_sensor_voltage
+    - sensor.sonoff_s31_1_sensor_current
+    - sensor.sonoff_s31_1_sensor_power
+    - sensor.sonoff_s31_1_sensor_today
+    - sensor.sonoff_s31_1_sensor_total
+
+bedroom:
+  control: hidden
+  icon: mdi:hotel
+  name: "Bedroom"
+  entities:
+    - switch.jinvoo_1
+    - switch.sonoff_s20_1
+    - switch.sonoff_s31_2
+    - sensor.sonoff_s31_2_sensor_voltage
+    - sensor.sonoff_s31_2_sensor_current
+    - sensor.sonoff_s31_2_sensor_power
+    - sensor.sonoff_s31_2_sensor_today
+    - sensor.sonoff_s31_2_sensor_total
+    - media_player.master_bedroom_speaker
+
+workstation:
+  control: hidden  
+  icon: mdi:desktop-classic
+  name: "Workstation"
+  entities:
+    - switch.jinvoo_2
+    - switch.legion
+    - light.desk_light
+
+system_monitor:
+  control: hidden
+  name: "NanoPi Status"
+  entities:
+    - sensor.nanopi_cpu_speed
+    - sensor.nanopi_cpu_usage
+    - sensor.nanopi_temps
+    - sensor.nanopi_memory_usage
+    - sensor.nanopi_disk_usage
+    - sensor.nanopi_network_usage
+    - sensor.server_uptime
+    - sensor.ha_uptime

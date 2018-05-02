@@ -1,0 +1,168 @@
+group.living_room:
+    icon: mdi:sofa
+    friendly_name: "Living Room"
+
+group.bedroom:
+    icon: mdi:hotel
+    friendly_name: "Bedroom"
+
+group.workstation:
+    icon: mdi:desktop-classic
+    friendly_name: "Workstation"
+
+group.home:
+    icon: mdi:home
+    friendly_name: "Home"
+
+# SWITCHES
+
+switch.jinvoo_1:
+    # icon: mdi:power-socket-us
+    icon: mdi:television
+    friendly_name: "Bedroom TV"
+
+switch.legion:
+    icon: mdi:desktop-classic
+    friendly_name: "Legion"
+
+switch.jinvoo_2:
+    icon: mdi:monitor
+    friendly_name: "Monitor"
+
+switch.sonoff_s20_1:
+    icon: mdi:ceiling-light    
+    friendly_name: "Bedroom Light"
+
+switch.sonoff_s31_1:
+    icon: mdi:television
+    friendly_name: "Living Room TV"
+
+switch.sonoff_s31_2:
+    icon: mdi:flash-circle
+    friendly_name: "S8+ Desk Charger"    
+
+# LIGHTS
+
+light.desk_light:
+    icon: mdi:table-settings
+    friendly_name: "Desk Light"
+light.sensornode1_rgb:
+    icon: mdi:led-outline
+    friendly_name: "Sensor Indicator"
+
+# SENSORNODE - 1
+sensor.sensornode1_temperature:
+    icon: mdi:thermometer-lines
+    friendly_name: "Temperature"
+sensor.sensornode1_humidity:
+    icon: mdi:water-percent
+    friendly_name: "Humidity"
+sensor.sensornode1_LDR:
+    icon: mdi:weather-sunny
+    friendly_name: "Illuminance"
+# sensor.sensornode1_motion:
+#     templates:
+#         rgb_color: if (state === 'standby') return [68, 115, 158]; else return [253, 216, 53];
+#     ## widget_type: binary_sensor
+#     ## icon: mdi:run-fast
+#     friendly_name: "Motion"
+sensor.sensornode1_motion_status:
+    friendly_name: "Motion"
+    templates:
+        rgb_color: if (state === 'Clear') return [68, 115, 158]; else return [253, 216, 53];
+sensor.sensornode1_feelslike:
+    icon: mdi:weather-cloudy
+    friendly_name: "Feels Like"
+
+# SENSORNODE - 2
+sensor.sensornode2_temperature:
+    icon: mdi:thermometer-lines
+    friendly_name: "Temperature"
+sensor.sensornode2_humidity:
+    icon: mdi:water-percent
+    friendly_name: "Humidity"
+sensor.sensornode2_LDR:
+    icon: mdi:weather-sunny
+    friendly_name: "Illuminance"
+# sensor.sensornode2_motion:
+#     templates:
+#         rgb_color: if (state === 'standby') return [68, 115, 158]; else return [253, 216, 53];
+#     ## widget_type: binary_sensor
+#     ## icon: mdi:run-fast
+#     friendly_name: "Motion"
+sensor.sensornode2_motion_status:
+    friendly_name: "Motion"
+    templates:
+        rgb_color: if (state === 'Clear') return [68, 115, 158]; else return [253, 216, 53];
+sensor.sensornode2_feelslike:
+    icon: mdi:weather-cloudy
+    friendly_name: "Feels Like"
+light.sensornode2_rgb:
+    icon: mdi:led-outline
+    friendly_name: "Test Light"    
+
+# SENSORS - S31
+
+sensor.sonoff_s31_1_sensor_voltage:
+    icon: mdi:flash-auto
+    friendly_name: "Voltage"  
+sensor.sonoff_s31_1_sensor_current:
+    icon: mdi:pulse
+    friendly_name: "Current"  
+sensor.sonoff_s31_1_sensor_power:
+    icon: mdi:nfc-variant
+    friendly_name: "Power"  
+sensor.sonoff_s31_1_sensor_today:
+    icon: mdi:clipboard-pulse
+    friendly_name: "Energy Today"  
+sensor.sonoff_s31_1_sensor_total:
+    icon: mdi:clipboard-pulse
+    friendly_name: "Energy Total"
+sensor.sonoff_s31_2_sensor_voltage:
+    icon: mdi:flash-auto
+    friendly_name: "Voltage"  
+sensor.sonoff_s31_2_sensor_current:
+    icon: mdi:pulse
+    friendly_name: "Current"  
+sensor.sonoff_s31_2_sensor_power:
+    icon: mdi:nfc-variant
+    friendly_name: "Power"  
+sensor.sonoff_s31_2_sensor_today:
+    icon: mdi:clipboard-pulse
+    friendly_name: "Energy Today"  
+sensor.sonoff_s31_2_sensor_total:
+    icon: mdi:clipboard-pulse
+    friendly_name: "Energy Total"
+
+# SENSORS - NANOPI
+
+sensor.nanopi_cpu_usage:
+    icon: mdi:chip
+    friendly_name: "CPU Load"
+sensor.nanopi_cpu_speed:
+    icon: mdi:pulse
+    friendly_name: "CPU Speed"
+sensor.nanopi_memory_usage:
+    icon: mdi:memory
+    friendly_name: "Memory"
+sensor.nanopi_temps:
+    icon: mdi:thermometer-lines
+    friendly_name: "Temperature"
+sensor.nanopi_disk_usage:
+    icon: mdi:harddisk
+    friendly_name: "Disk Usage"
+sensor.nanopi_network_usage:
+    # icon: mdi:server-network
+    icon: mdi:ethernet
+    friendly_name: "Network"
+sensor.server_uptime:
+    icon: mdi:av-timer
+    friendly_name: "Server Uptime"
+sensor.ha_uptime:
+    icon: mdi:timelapse
+    friendly_name: "HA Uptime"
+
+# Camera
+
+camera.ffmepg:
+    friendly_name: "Monitor #1"

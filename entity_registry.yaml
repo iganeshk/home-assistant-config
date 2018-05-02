@@ -1,0 +1,8 @@
+media_player.living_room_tv:
+  name:
+  platform: cast
+  unique_id: 24ec5384-5ec4-9a41-0070-e7ea68514c5a
+media_player.master_bedroom_speaker:
+  name: myRadio
+  platform: cast
+  unique_id: 8f69e97d-f4a1-39ec-a92d-cd8291cf0ebc
