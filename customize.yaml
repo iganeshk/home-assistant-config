@@ -84,12 +84,6 @@ sensor.sensornode2_humidity:
 sensor.sensornode2_LDR:
     icon: mdi:weather-sunny
     friendly_name: "Illuminance"
-# sensor.sensornode2_motion:
-#     templates:
-#         rgb_color: if (state === 'standby') return [68, 115, 158]; else return [253, 216, 53];
-#     ## widget_type: binary_sensor
-#     ## icon: mdi:run-fast
-#     friendly_name: "Motion"
 sensor.sensornode2_motion_status:
     friendly_name: "Motion"
     templates:

@@ -1,15 +1,3 @@
-# - alias: "Turn on Bedroom lights when the sun sets"
-#   trigger:
-#     platform: sun
-#     event: sunset
-#     offset: "-01:00:00"
-#   # condition:
-#   #   condition: state
-#   #   entity_id: group.all_devices
-#   #   state: 'home'
-#   action:
-#     service: switch.sonoff_s20_1.turn_on
-
 - alias: 'Turn on Bedroom lights by sunset'
   trigger:
     platform: sun
@@ -56,11 +44,3 @@
     service: script.turn_off
     entity_id: script.flash_sensor1_light   
 
-# - alias: 'Turn on Bedroom lights DEMO'
-#   trigger:
-#     platform: sun
-#     event: sunrise
-#     # offset: "-02:00:00"
-#   action: 
-#     service: switch.turn_on
-#     entity_id: switch.sonoff_s20_1
