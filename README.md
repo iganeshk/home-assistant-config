@@ -12,8 +12,8 @@
 * 5050 SMD - RGB LED Strip
 * [RGB WiFi Controller](https://www.amazon.com/gp/product/B077Q2K1TJ)
 * [Google Home](https://store.google.com/product/google_home) - Voice Assistant/Control
-* [Google Chromecast 2](https://www.google.com.au/chromecast/tv/chromecast)
-* [Google Chromecast Audio](https://www.google.com.au/intl/en_au/chromecast/audio)
+* [Google Chromecast 2](https://store.google.com/product/chromecast_2015)
+* [Google Chromecast Audio](https://store.google.com/us/product/chromecast_audio)
 * [OwnTracks App](http://owntracks.org) - Mobile Device Tracking
 
 ## Network Architecture
