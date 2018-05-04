@@ -4,7 +4,7 @@
 
 * [LinkSys 3200ACM Router](https://www.linksys.com/us/support-product?pid=01t340000046sOsAAI) - OpenWRT self-built snapshots
 * [LinkSys Velop Mesh Router](https://www.linksys.com/us/p/P-WHW0302B/) x 2
-* [Nano Pi Neo Plus2](http://www.friendlyarm.com/index.php?route=product/product&product_id=196&search=NanoPi&description=true&category_id=0&sub_category=true&sort=p.price&order=DESC) - Home Assistant on ![Armbian Installation](https://www.home-assistant.io/docs/installation/armbian/).
+* [Nano Pi Neo Plus2](http://www.friendlyarm.com/index.php?route=product/product&product_id=196&search=NanoPi&description=true&category_id=0&sub_category=true&sort=p.price&order=DESC) - Home Assistant on [Armbian Installation](https://www.home-assistant.io/docs/installation/armbian/).
 * [Hikam - S6](https://www.amazon.com/HiKam-S6-Intelligent-Detection-Recording/dp/B075MDZWZH) (RTSP)
 * DIY Multisensor - NodeMCU, Tempaterature sensor (DHT22), PIR Sensor (AM312), Ambient Light Sensor (TEMT6000) & RGB LED.
 * [Itead SonOff S31](https://www.itead.cc/sonoff-s31.html) - Running [Tasmota](https://github.com/arendst/Sonoff-Tasmota) 
