@@ -9,7 +9,8 @@
 * DIY Multisensor - NodeMCU, Tempaterature sensor (DHT22), PIR Sensor (AM312), Ambient Light Sensor (TEMT6000) & RGB LED.
 * [Itead SonOff S31](https://www.itead.cc/sonoff-s31.html) - Running [Tasmota](https://github.com/arendst/Sonoff-Tasmota) 
 * [Itead SonOff S20](https://www.itead.cc/smart-socket.html) - Running [Tasmota](https://github.com/arendst/Sonoff-Tasmota) 
-* 5050 SMD - RGB LED Strip
+* [WiFi Plugs](https://www.amazon.com/gp/product/B075XL3DRD/ - [Reversed TuyaApi](https://github.com/codetheweb/tuyapi/blob/master/docs/SETUP.md)
+* 5050 SMD - Generic RGB LED Strip
 * [RGB WiFi Controller](https://www.amazon.com/gp/product/B077Q2K1TJ)
 * [Google Home](https://store.google.com/product/google_home) - Voice Assistant/Control
 * [Google Chromecast 2](https://store.google.com/product/chromecast_2015)
