@@ -21,11 +21,7 @@
 
 ## Screen-Shots
 
-Dashboard - All
+Dashboard
 ![home-assistant-dashboard-1](https://iganesh.com/ha_config/ha_all.png?1)
 
-Dashboard - Home
-![home-assistant-dashboard-2](https://iganesh.com/ha_config/ha1.png?!)
-
-Dashboard - Bed Room
-![home-assistant-dashboard-2](https://iganesh.com/ha_config/ha3.png?1)
+## To-Do's
