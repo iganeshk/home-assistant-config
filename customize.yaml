@@ -14,7 +14,7 @@ group.home:
     icon: mdi:home
     friendly_name: "Home"
 
-# SWITCHES
+##################################### SWITCHES
 
 switch.jinvoo_1:
     # icon: mdi:power-socket-us
@@ -41,7 +41,7 @@ switch.sonoff_s31_2:
     icon: mdi:flash-circle
     friendly_name: "S8+ Desk Charger"    
 
-# LIGHTS
+##################################### LIGHTS
 
 light.desk_light:
     icon: mdi:table-settings
@@ -50,7 +50,7 @@ light.sensornode1_rgb:
     icon: mdi:led-outline
     friendly_name: "Sensor Indicator"
 
-# SENSORNODE - 1
+##################################### SENSORNODE - 1 (LIVING_ROOM)
 sensor.sensornode1_temperature:
     icon: mdi:thermometer-lines
     friendly_name: "Temperature"
@@ -74,7 +74,7 @@ sensor.sensornode1_feelslike:
     icon: mdi:weather-cloudy
     friendly_name: "Feels Like"
 
-# SENSORNODE - 2
+##################################### SENSORNODE - 2 (BEDROOM)
 sensor.sensornode2_temperature:
     icon: mdi:thermometer-lines
     friendly_name: "Temperature"
@@ -95,8 +95,8 @@ light.sensornode2_rgb:
     icon: mdi:led-outline
     friendly_name: "Test Light"    
 
-# SENSORS - S31
-
+##################################### SENSORS - S31 
+# LIVING_ROOM_PLUG
 sensor.sonoff_s31_1_sensor_voltage:
     icon: mdi:flash-auto
     friendly_name: "Voltage"  
@@ -112,6 +112,7 @@ sensor.sonoff_s31_1_sensor_today:
 sensor.sonoff_s31_1_sensor_total:
     icon: mdi:clipboard-pulse
     friendly_name: "Energy Total"
+# BEDROOM - CHARGER PLUG
 sensor.sonoff_s31_2_sensor_voltage:
     icon: mdi:flash-auto
     friendly_name: "Voltage"  

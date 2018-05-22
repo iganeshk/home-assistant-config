@@ -13,6 +13,11 @@ living:
   icon: mdi:sofa
   entities:
     - group.living_room
+# bed_node:
+#   view: yes
+#   icon: mdi:sofa  
+#   entities:
+#     - group.bedroom_node    
 bed:
   view: yes
   icon: mdi:hotel
@@ -23,11 +28,6 @@ system:
   icon: mdi:home-automation
   entities:
     - group.system_monitor
-school:
-  view: yes
-  icon: mdi:school  
-  entities:
-    - group.class
 all:
   view: yes
   icon: mdi:store
@@ -59,17 +59,6 @@ home:
     - sensor.sensornode1_motion_status
     - light.sensornode1_rgb
     - camera.ffmpeg
-class:  
-  control: hidden
-  name: "Class - Sensor Node"
-  entities:
-    - sensor.sensornode2_feelslike    
-    - sensor.sensornode2_temperature
-    - sensor.sensornode2_humidity
-    - sensor.sensornode2_LDR    
-    # - sensor.sensornode2_motion
-    - sensor.sensornode2_motion_status
-    - light.sensornode2_rgb
 
 living_room:
   control: hidden
@@ -82,6 +71,18 @@ living_room:
     - sensor.sonoff_s31_1_sensor_power
     - sensor.sonoff_s31_1_sensor_today
     - sensor.sonoff_s31_1_sensor_total
+
+# bedroom_node:  
+#   control: hidden
+#   name: "Class - Sensor Node"
+#   entities:
+#     - sensor.sensornode2_feelslike    
+#     - sensor.sensornode2_temperature
+#     - sensor.sensornode2_humidity
+#     - sensor.sensornode2_LDR    
+#     # - sensor.sensornode2_motion
+#     - sensor.sensornode2_motion_status
+#     - light.sensornode2_rgb
 
 bedroom:
   control: hidden

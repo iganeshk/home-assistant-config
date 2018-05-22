@@ -1,6 +1,6 @@
 homeassistant:
   # Name of the location where Home Assistant is running
-  name: "K.O.T.L" # Keep Of The Light
+  name: "K.O.T.L" # Keeper Of The Light
   
   # Location required to calculate the time the sun rises and sets
   latitude: !secret location_lat
@@ -89,7 +89,7 @@ sun:
 tts:
   - platform: google
 
-# Cloud ( $5 DOLLAH PA MONTH?)
+# Enable HA Cloud
 # cloud:
 
 # Google Assistant API
@@ -104,6 +104,7 @@ google_assistant:
     - switch
     - light
     - script
+    - media_player
     # - scene
     # - group
 
@@ -199,7 +200,7 @@ light:
 
 sensor:
   ###################  
-  # Sensor Node - 1
+  # Sensor Node - 1 # LIVING_ROOM
   ###################
   - platform: mqtt
     state_topic: "cyfi/sensornode1"
@@ -227,36 +228,36 @@ sensor:
     unit_of_measurement: "°C"
     value_template: '{{ value_json.heatIndex | round(1) }}'
   ###################  
-  # Sensor Node - 2
+  # Sensor Node - 2 # BEDROOM
   ###################
-  - platform: mqtt
-    state_topic: "cyfi/sensornode2"
-    name: "sensornode2_temperature"
-    unit_of_measurement: "°C"
-    value_template: '{{ value_json.temperature | round(1) }}'
-  - platform: mqtt  
-    state_topic: "cyfi/sensornode2"  
-    name: "sensornode2_humidity"  
-    unit_of_measurement: "%"  
-    value_template: '{{ value_json.humidity | round(1) }}'  
-  - platform: mqtt  
-    state_topic: "cyfi/sensornode2"  
-    name: "sensornode2_LDR"
-    # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
-    unit_of_measurement: "Lux"  
-    value_template: '{{ value_json.ldr }}'
-  - platform: mqtt  
-    state_topic: "cyfi/sensornode2"  
-    name: "sensornode2_motion"    
-    value_template: '{{ value_json.motion }}'
-  - platform: mqtt
-    state_topic: "cyfi/sensornode2"
-    name: "sensornode2_feelslike"
-    unit_of_measurement: "°C"
-    value_template: '{{ value_json.heatIndex | round(1) }}'
-  ###################  
-  # SonOff - S31 - 1  
-  ###################
+  # - platform: mqtt
+  #   state_topic: "cyfi/sensornode2"
+  #   name: "sensornode2_temperature"
+  #   unit_of_measurement: "°C"
+  #   value_template: '{{ value_json.temperature | round(1) }}'
+  # - platform: mqtt  
+  #   state_topic: "cyfi/sensornode2"  
+  #   name: "sensornode2_humidity"  
+  #   unit_of_measurement: "%"  
+  #   value_template: '{{ value_json.humidity | round(1) }}'  
+  # - platform: mqtt  
+  #   state_topic: "cyfi/sensornode2"  
+  #   name: "sensornode2_LDR"
+  #   # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
+  #   unit_of_measurement: "Lux"  
+  #   value_template: '{{ value_json.ldr }}'
+  # - platform: mqtt  
+  #   state_topic: "cyfi/sensornode2"  
+  #   name: "sensornode2_motion"    
+  #   value_template: '{{ value_json.motion }}'
+  # - platform: mqtt
+  #   state_topic: "cyfi/sensornode2"
+  #   name: "sensornode2_feelslike"
+  #   unit_of_measurement: "°C"
+  #   value_template: '{{ value_json.heatIndex | round(1) }}'
+  #################### 
+  # SonOff - S31 - 1 # (LIGHT)
+  ####################
   - platform: mqtt
     state_topic: "tele/sonoff_s31_1/SENSOR"
     name: "sonoff_s31_1_sensor_voltage"
@@ -282,9 +283,9 @@ sensor:
     name: "sonoff_s31_1_sensor_total"
     unit_of_measurement: "kWh"
     value_template: "{{value_json['ENERGY'].Total }}"
-  ###################  
-  # SonOff - S31 - 2  
-  ###################
+  #################### 
+  # SonOff - S31 - 2 #  
+  ####################
   - platform: mqtt
     state_topic: "tele/sonoff_s31_2/SENSOR"
     name: "sonoff_s31_2_sensor_voltage"

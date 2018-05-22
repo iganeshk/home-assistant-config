@@ -24,14 +24,14 @@ flash_node1:
 study_it:
   alias: "Study Time"
   sequence:
-    - service: switch.turn_on
-      entity_id: switch.sonoff_s20_1
     - service: switch.turn_off
       entity_id: switch.jinvoo_1
     - service: switch.turn_off
       entity_id: switch.jinvoo_2
     - service: light.turn_off
-      entity_id: light.desk_light
+      entity_id: light.desk_light    
+    - service: switch.turn_on
+      entity_id: switch.sonoff_s20_1
 movie_it:
   alias: "Movies"
   sequence:
@@ -184,31 +184,7 @@ game_it:
       data:
         entity_id: light.desk_light
         color_name: pink
-        brightness: 100        
-    # - service: light.turn_on
-    #   data:
-    #     entity_id: light.desk_light
-    #     rgb_color: [255, 216, 204]
-    # - service: light.turn_on
-    #   data:
-    #     entity_id: light.desk_light
-    #     rgb_color: [255, 157, 128]
-    # - service: light.turn_on
-    #   data:
-    #     entity_id: light.desk_light
-    #     rgb_color: [255, 60, 0]
-    # - service: light.turn_on
-    #   data:
-    #     entity_id: light.desk_light
-    #     rgb_color: [230, 54, 0]
-    # - service: light.turn_on
-    #   data:
-    #     entity_id: light.desk_light
-    #     rgb_color: [204, 48, 0]
-    # - service: light.turn_on
-    #   data:
-    #     entity_id: light.desk_light
-    #     rgb_color: [255, 64, 0]
+        brightness: 100
     - service: light.turn_on
       data:
         entity_id: light.desk_light

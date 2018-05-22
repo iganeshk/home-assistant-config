@@ -1,4 +1,5 @@
 # Home Assistant personal files
+.uuid
 secrets.yaml
 known_devices.yaml
 zones.yaml
