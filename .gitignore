@@ -5,6 +5,7 @@ known_devices.yaml
 zones.yaml
 entity_registry.yaml
 www/
+tts/
 home-assistant_v2.db
 home-assistant.log
 .HA_VERSION
