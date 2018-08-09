@@ -16,18 +16,18 @@ group.home:
 
 ##################################### SWITCHES
 
-switch.jinvoo_1:
-    # icon: mdi:power-socket-us
-    icon: mdi:television
-    friendly_name: "Bedroom TV"
+# switch.jinvoo_1:
+#     # icon: mdi:power-socket-us
+#     icon: mdi:television
+#     friendly_name: "Bedroom TV"
 
 switch.legion:
     icon: mdi:desktop-classic
     friendly_name: "Legion"
 
-switch.jinvoo_2:
-    icon: mdi:monitor
-    friendly_name: "Monitor"
+# switch.jinvoo_2:
+#     icon: mdi:monitor
+#     friendly_name: "Monitor"
 
 switch.sonoff_s20_1:
     icon: mdi:ceiling-light    
@@ -35,17 +35,20 @@ switch.sonoff_s20_1:
 
 switch.sonoff_s31_1:
     icon: mdi:television
-    friendly_name: "Living Room TV"
+    friendly_name: "Fan"
 
 switch.sonoff_s31_2:
     icon: mdi:flash-circle
-    friendly_name: "S8+ Desk Charger"    
+    friendly_name: "TV"    
 
 ##################################### LIGHTS
 
 light.desk_light:
     icon: mdi:table-settings
     friendly_name: "Desk Light"
+light.room_light:
+    icon: mdi:table-settings
+    friendly_name: "Room Light"
 light.sensornode1_rgb:
     icon: mdi:led-outline
     friendly_name: "Sensor Indicator"

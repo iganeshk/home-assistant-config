@@ -191,3 +191,11 @@ game_it:
         color_name: darkred
         brightness: 100
         transition: 4
+
+fan_timer:
+  alias: "Fan Timer"
+  sequence:
+    - delay: '{{ states(input_number.fan_run_time) | int }}:00:00'
+    - service: switch.turn_off
+      data:
+        entity_id: switch.sonoff_s31_1

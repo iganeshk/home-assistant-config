@@ -15,32 +15,49 @@
     service: switch.turn_off
     entity_id: switch.sonoff_s20_1
 
-- alias: 'Flash Sensor 1 Start'
-  initial_state: True
+# - alias: 'Flash Sensor 1 Start'
+#   initial_state: True
+#   trigger:
+#     - platform: state
+#       entity_id: sensor.sensornode1_motion_status
+#       to: 'Detected'
+#   action:
+#     # service: script.turn_on
+#     # entity_id: script.flash_sensor1_light
+#     service: light.turn_on
+#     data:
+#       entity_id: light.sensornode1_rgb
+#       # rgb_color: [255,0,0]
+#       color_name: blue
+#       flash: short
+
+# - alias: 'Flash Sensor 1 Stop'
+#   trigger:
+#     platform: state
+#     entity_id: sensor.sensornode1_motion_status
+#     to: 'Clear'
+#   # condition:
+#   #   condition: state
+#   #   entity_id: switch.AlmSnd1
+#   #   to: 'off'
+#   action:
+#     service: script.turn_off
+#     entity_id: script.flash_sensor1_light   
+
+- alias: 'Fan Auto Off'
   trigger:
     - platform: state
-      entity_id: sensor.sensornode1_motion_status
-      to: 'Detected'
+      entity_id: switch.sonoff_s31_1
+      to: 'on'
   action:
-    # service: script.turn_on
-    # entity_id: script.flash_sensor1_light
-    service: light.turn_on
-    data:
-      entity_id: light.sensornode1_rgb
-      # rgb_color: [255,0,0]
-      color_name: blue
-      flash: short
+    - service: script.turn_on
+      entity_id: script.fan_timer
 
-- alias: 'Flash Sensor 1 Stop'
+- alias: 'Fan Reset Timer'
   trigger:
-    platform: state
-    entity_id: sensor.sensornode1_motion_status
-    to: 'Clear'
-  # condition:
-  #   condition: state
-  #   entity_id: switch.AlmSnd1
-  #   to: 'off'
+    - platform: state
+      entity_id: switch.sonoff_s31_1
+      to: 'off'
   action:
-    service: script.turn_off
-    entity_id: script.flash_sensor1_light   
-
+    - service: script.turn_off
+      entity_id: script.fan_timer

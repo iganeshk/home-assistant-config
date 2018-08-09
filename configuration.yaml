@@ -60,6 +60,9 @@ updater:
 # hassio: 
 # Allows you to issue voice commands from the frontend in enabled browsers
 conversation:
+  intents:
+    ColorLight:
+     - Change the mood to [the color] {color}  
 
 device_tracker:
   - platform: owntracks_http
@@ -123,17 +126,17 @@ switch:
     #########################
     # iSelectors - pyTua Api
     #########################
-  - platform: tuya
-    name: jinvoo_1
-    host: 192.168.1.223
-    local_key: !secret jinvoo1_key
-    device_id: !secret jinvoo1_id
-    # id: 0
-  - platform: tuya
-    name: jinvoo_2
-    host: 192.168.1.249
-    local_key: !secret jinvoo2_key
-    device_id: !secret jinvoo2_id
+  # - platform: tuya
+  #   name: jinvoo_1
+  #   host: 192.168.1.223
+  #   local_key: !secret jinvoo1_key
+  #   device_id: !secret jinvoo1_id
+  #   # id: 0
+  # - platform: tuya
+  #   name: jinvoo_2
+  #   host: 192.168.1.249
+  #   local_key: !secret jinvoo2_key
+  #   device_id: !secret jinvoo2_id
     ###############
     # SonOffs
     ###############
@@ -179,6 +182,14 @@ light:
       192.168.1.235:
         name: "desk light"
         mode: "rgb"
+      192.168.1.245:
+        name: "room light"
+        mode: "rgb"
+  - platform: group
+    name: "Mood"
+    entities:
+      - light.desk_light
+      - light.room_light
   - platform: mqtt_json  
     name: "sensornode1_rgb"  
     state_topic: "cyfi/sensornode1"  
@@ -406,6 +417,29 @@ media_player:
   #   password: !secret cam1_pass
   #   name: "Monitor 1"
 
+# INPUT SLIDERS
+input_number:
+  fan_run_time:
+    name: "Fan Run Time"
+    initial: 4
+    min: 1
+    max: 6
+    step: 1
+
+# HA_VOICE
+intent_script:
+  ColorLight:
+    speech:
+      text: Changed the mood to {{ color }}.
+    action:
+      service: light.turn_on
+      data:
+        entity_id: light.mood
+        color_name: { color }
+          # - "{% if color == 'red' %}red{% endif %}"
+          # - "{% if color == 'green' %}green{% endif %}"
+          # - "{% if color == 'blue' %}blue{% endif %}"
+          # - "{% if color == 'purple' %}purple{% endif %}"
 
 #############################################
 group: !include groups.yaml

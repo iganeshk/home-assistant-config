@@ -8,6 +8,7 @@ default_view:
     # - group.bedroom
     - group.workstation
     - group.system_monitor
+    - group.moodlight
 living:
   view: yes
   icon: mdi:sofa
@@ -66,6 +67,7 @@ living_room:
   name: "Living Room"
   entities:
     - switch.sonoff_s31_1
+    - input_number.fan_run_time
     - sensor.sonoff_s31_1_sensor_voltage
     - sensor.sonoff_s31_1_sensor_current
     - sensor.sonoff_s31_1_sensor_power
@@ -107,6 +109,13 @@ workstation:
     - switch.jinvoo_2
     - switch.legion
     - light.desk_light
+
+moodlight:
+  name: "Mood"
+  icon: mdi:theme-light-dark
+  entities:
+    - light.desk_light
+    - light.room_light
 
 system_monitor:
   control: hidden
