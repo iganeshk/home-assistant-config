@@ -9,6 +9,10 @@ default_view:
     - group.workstation
     - group.system_monitor
     - group.moodlight
+    # - group.bedlights    
+    - switch.gtk_xb7
+    - media_player.googlemini
+    - group.xb7_speaker
 living:
   view: yes
   icon: mdi:sofa
@@ -46,7 +50,7 @@ people:
   entities:
     - device_tracker.ganesh_s8plus
     - device_tracker.anirudh_iphone
-    - device_tracker.ram_note
+    # - device_tracker.ram_note
 home:  
   control: hidden
   icon: mdi:home
@@ -67,7 +71,8 @@ living_room:
   name: "Living Room"
   entities:
     - switch.sonoff_s31_1
-    - input_number.fan_run_time
+    - switch.switch_auto_control
+    - input_number.switch_run_time
     - sensor.sonoff_s31_1_sensor_voltage
     - sensor.sonoff_s31_1_sensor_current
     - sensor.sonoff_s31_1_sensor_power
@@ -91,7 +96,10 @@ bedroom:
   icon: mdi:hotel
   name: "Bedroom"
   entities:
-    - switch.jinvoo_1
+    - light.lifx_d073d528a0be
+    # - light.top_light
+    # - light.bot_light
+    # - switch.jinvoo_1
     - switch.sonoff_s20_1
     - switch.sonoff_s31_2
     - sensor.sonoff_s31_2_sensor_voltage
@@ -99,16 +107,35 @@ bedroom:
     - sensor.sonoff_s31_2_sensor_power
     - sensor.sonoff_s31_2_sensor_today
     - sensor.sonoff_s31_2_sensor_total
-    - media_player.master_bedroom_speaker
+    # - media_player.master_bedroom_speaker
+
+xb7_speaker:
+  control: hidden
+  icon: mdi:speaker-wireless
+  name: "Sony GTK-XB7 Speaker"
+  entities:
+    - switch.gtk_xb7
+    - switch.gtk_xb7_vol_up
+    - switch.gtk_xb7_vol_down
+    # - input_number.xb7_mode
+    # - input_number.xb7_lights_mode
+    - switch.gtk_xb7_aux
+    # - switch.gtk_xb7_bluetooth
+    # - switch.gtk_xb7_usb
+    - switch.gtk_xb7_lights
+    # - switch.gtk_xb7_lights_rave
+    # - switch.gtk_xb7_lights_chill
+    - switch.gtk_xb7_extra_bass
 
 workstation:
   control: hidden  
   icon: mdi:desktop-classic
   name: "Workstation"
   entities:
-    - switch.jinvoo_2
+    # - switch.jinvoo_2
     - switch.legion
     - light.desk_light
+    - sensor.internet_status
 
 moodlight:
   name: "Mood"
@@ -116,6 +143,14 @@ moodlight:
   entities:
     - light.desk_light
     - light.room_light
+    - light.lifx_d073d528a0be
+
+# bedlights:
+#   name: "bed lights"
+#   icon: mdi:theme-light-dark
+#   entities:
+#     - light.top_light
+#     - light.bot_light
 
 system_monitor:
   control: hidden

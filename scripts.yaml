@@ -1,26 +1,35 @@
-flash_node1:
-  alias: flash_sensor1_light
+switch_controller:
+  alias: "Switch Controller"
   sequence:
-    - alias: Sensor 1 Light On
-      service: light.turn_on
+    - delay: '{{ states.input_number.switch_run_time.state | int }}:00:00'
+    - service: switch.turn_off
       data:
-        entity_id: light.sensornode1_rgb
-        # rgb_color: [255,0,0]
-        color_name: red
-    - delay:
-        # time for flash light on
-        seconds: 1
-    - alias: Sensor 2 Light off
-      service: light.turn_off
-      data:
-        entity_id: light.sensornode1_rgb
-    - delay:
-        # time for flash light off
-        seconds: 1
-    - alias: loop_room1
-      service: script.turn_on
-      data:
-        entity_id: script.flash_room1
+        entity_id: switch.sonoff_s31_1
+
+# flash_node1:
+#   alias: flash_sensor1_light
+#   sequence:
+#     - alias: Sensor 1 Light On
+#       service: light.turn_on
+#       data:
+#         entity_id: light.sensornode1_rgb
+#         # rgb_color: [255,0,0]
+#         color_name: red
+#     - delay:
+#         # time for flash light on
+#         seconds: 1
+#     - alias: Sensor 2 Light off
+#       service: light.turn_off
+#       data:
+#         entity_id: light.sensornode1_rgb
+#     - delay:
+#         # time for flash light off
+#         seconds: 1
+#     - alias: loop_room1
+#       service: script.turn_on
+#       data:
+#         entity_id: script.flash_room1
+
 study_it:
   alias: "Study Time"
   sequence:
@@ -30,8 +39,11 @@ study_it:
       entity_id: switch.jinvoo_2
     - service: light.turn_off
       entity_id: light.desk_light    
-    - service: switch.turn_on
-      entity_id: switch.sonoff_s20_1
+    # - service: switch.turn_on
+    #   entity_id: switch.sonoff_s20_1
+    - service: light.turn_on
+      entity_id: light.lifx_d073d528a0be  
+
 movie_it:
   alias: "Movies"
   sequence:
@@ -45,10 +57,10 @@ movie_it:
     # - delay:
     #     # time for flash light on
     #     milliseconds: 50
-    - service: switch.turn_off
-      entity_id: switch.sonoff_s20_1
-    - service: switch.turn_on
-      entity_id: switch.jinvoo_1
+    - service: light.turn_off
+      entity_id: light.lifx_d073d528a0be
+    # - service: switch.turn_on
+    #   entity_id: switch.jinvoo_1
     - service: light.turn_on
       data:
         entity_id: light.desk_light
@@ -156,10 +168,10 @@ movie_it:
 game_it:
   alias: "Game Night"
   sequence:
-    - service: switch.turn_on
-      entity_id: switch.jinvoo_2
-    - service: switch.turn_off
-      entity_id: switch.sonoff_s20_1
+    # - service: switch.turn_on
+    #   entity_id: switch.jinvoo_2
+    - service: light.turn_off
+      entity_id: light.lifx_d073d528a0be
     - service: light.turn_on
       data:
         entity_id: light.desk_light
@@ -192,10 +204,3 @@ game_it:
         brightness: 100
         transition: 4
 
-fan_timer:
-  alias: "Fan Timer"
-  sequence:
-    - delay: '{{ states(input_number.fan_run_time) | int }}:00:00'
-    - service: switch.turn_off
-      data:
-        entity_id: switch.sonoff_s31_1

@@ -40,20 +40,11 @@ frontend:
 config:
 logger:
 http:
-  api_password: !secret ha_pass
+  # api_password: !secret ha_pass
   # Secrets are defined in the file secrets.yaml
   # api_password: !secret http_password
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
   base_url: 192.168.1.116:8123
-
-# Checks for available updates
-# Note: This component will send some information about your system to
-# the developers to assist with development of Home Assistant.
-# For more information, please see:
-# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
-updater:
-  # Optional, allows Home Assistant developers to focus on popular components.
-  # include_used_components: true
 
 # Discover some devices automatically
 # discovery:
@@ -64,14 +55,28 @@ conversation:
     ColorLight:
      - Change the mood to [the color] {color}  
 
-device_tracker:
-  - platform: owntracks_http
-  - platform: ubus
-    host: !secret 3200acm
-    username: !secret 3200acm_user
-    password: !secret 3200acm_pass
-    #dhcp_software: dnsmasq
-    track_new_devices: yes
+lametric:
+  client_id: b9b92b3f-711f-bf8a-5f1d-b204d5ecb235
+  client_secret: JDEkOXZXZGlraW8kSnNYdVZ0T1NEckVNbmlxVTgxMlFYMQ==
+
+notify:
+  name: LM2216
+  platform: lametric
+  # icon: a25544
+  # lifetime: 7
+  # cycles: 1
+  # priority: warning
+
+
+# device_tracker:
+#   - platform: owntracks_http
+  ##  Moving to Passive/Event Based for OpenWRT - https://github.com/mueslo/openwrt_hass_devicetracker
+  # - platform: ubus
+  #   host: !secret 3200acm
+  #   username: !secret 3200acm_user
+  #   password: !secret 3200acm_pass
+  #   #dhcp_software: dnsmasq
+  #   track_new_devices: yes
 # Enables support for tracking state changes over time
 # history:
 
@@ -91,6 +96,7 @@ sun:
 # Text to speech
 tts:
   - platform: google
+    base_url: https://iot.iganesh.com
 
 # Enable HA Cloud
 # cloud:
@@ -98,9 +104,10 @@ tts:
 # Google Assistant API
 google_assistant:
   project_id: !secret ga_project_id
-  client_id: !secret ga_client_id
-  access_token: !secret ga_access
-  agent_user_id: !secret ga_agent
+  # removed from v0.80
+  # client_id: !secret ga_client_id
+  # access_token: !secret ga_access
+  # agent_user_id: !secret ga_agent
   api_key: !secret ga_api
   expose_by_default: true
   exposed_domains:
@@ -123,9 +130,9 @@ shell_command:
   shutdown_legion: !secret cobalt-60-rpc-down
 
 switch:
-    #########################
-    # iSelectors - pyTua Api
-    #########################
+##############################
+##### iSelectors - pyTua Api
+##############################
   # - platform: tuya
   #   name: jinvoo_1
   #   host: 192.168.1.223
@@ -137,9 +144,9 @@ switch:
   #   host: 192.168.1.249
   #   local_key: !secret jinvoo2_key
   #   device_id: !secret jinvoo2_id
-    ###############
-    # SonOffs
-    ###############
+####################
+##### SonOffs
+####################
   - platform: mqtt
     name: sonoff_s20_1
     state_topic: stat/sonoff_s20_1/POWER
@@ -165,19 +172,90 @@ switch:
     payload_on: "ON"
     payload_off: "OFF"
     retain: true
-    ###############
-    # Workstation
-    ###############
+####################
+##### Workstation
+####################
   - platform: wake_on_lan
     name: legion
     scan_interval: 5
-    mac_address: "1c-1b-0d-0b-ea-c1"
+    mac_address: "0C-9D-92-7F-C7-4C"
     host: 192.168.1.100
     turn_off:
         service: shell_command.shutdown_legion
+####################
+##### Switch Auto Control
+####################
+  - platform: template
+    switches:
+      switch_auto_control:
+        friendly_name: "Switch Auto Control"
+        icon_template: >-
+          {% if is_state('automation.auto_switch_off', 'on') %}
+            mdi:timer
+          {% else %}
+            mdi:timer-off
+          {% endif %}  
+        value_template: "{{ is_state('automation.auto_switch_off', 'on') }}"
+        turn_on:
+          service: automation.turn_on
+          entity_id: automation.auto_switch_off
+        turn_off:
+          service: automation.turn_off
+          entity_id: automation.auto_switch_off 
 
+####################
+##### Gateway Status
+####################
+# binary_sensor:
+#   - platform: command_line
+#     command: 'ping -c 1 8.8.8.8 | grep "1 received" | wc -l'
+#     name: 'is_internet_up'
+#     sensor_class: connectivity
+#     payload_on: 1
+#     payload_off: 0
+#     scan_interval: 10
+#     command_timeout: 2
+
+  - platform: broadlink
+    host: 192.168.1.165
+    mac: '78:0F:77:D9:2A:5C'
+    timeout: 15
+    type: rm_mini
+    switches:
+      # SONY GTK-XB7
+      gtk_xb7:
+        friendly_name: "XB7 Power"
+        command_on: 'JgCsAAsAB2BOFScUExQnFBMVJhUTFBMUExUTFBMUFBQnAANXThUmFRMUJxQTFSYVExQTFBMVExQTFBMVJgADWE4UJxUTFCcUExQnFBMVExQTFBMVExQTFCcAA1hOFCcUExQnFBMVJxQTFBMVExQTFBMVExQnAANXThUmFRMUJxQTFCcVExQTFBMVExQTFBMVJgADWE4VJhUTFCcUExQnFBMVExQTFBMVExQTFCcADQUAAAAAAAAAAAAAAAA='
+      gtk_xb7_vol_up:
+        friendly_name: "XB7 Vol Up"
+        command_on: 'JgCMAE4UExUmFRMUExQnFBMVExQTFBMVExQTFCcAA2tOFRMUJxQTFBQUJxQTFBMVExQTFBMVExQnAANrThQTFSYVExQTFCcUExUTFBMUFBQTFBMVJgADa08UExQnFBMVExQnFBMUExUTFBMUExUTFCcAA2tOFBMVJxQTFBMVJhUTFBMUExUTFBMUExUmAA0FAAAAAAAAAAAAAAAA'
+      gtk_xb7_vol_down:
+        friendly_name: "XB7 Vol Down"
+        command_on: 'JgDkAAsAC31OFCcUJxQTFRMUJxQTFBMVExQTFBMVExQnAANXTxQnFCcUExQTFSYVExQTFBMVExQTFBMVJwADV04VJhUmFRMUExQnFRMUExQTFRMUExQTFSYAA1hOFCcUJxUTFBMUJxQTFRMUExQTFRMUExQnAANYThQnFCcUExUTFCcUExQTFRMUExQTFRMUJwADWE4UJxQnFBMVExQnFBMUExUTFBMUExUTFCcAA1dOFSYVJhUTFBMUJxUTFBMUExUTFBMUExUmAANYThQnFCcUFBQTFCcUExUTFBMUExUTFBMUJwANBQAAAAA='
+      gtk_xb7_bluetooth:
+        friendly_name: "XB7 Bluetooth"
+        command_on: 'JgAIAU4UJxQTFRMUExQnFCcUJxQTFRMUExQTFScUExQTFRMUExQTFSYVExQTAAH6ThQnFBMUExUTFCcUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAfpOFCcUExQTFRMUJxQnFCcUExUTFBMUExUmFRMUExQTFRMUExQnFBMVEwAB+k4UJxQTFBMVExQnFCcUJxQTFRMUExQTFSYVExQTFBMVExQTFCcUExUTAAH5ThUnFBMUExUTFCcUJxQnFBMUExUTFBMUJxUSFRMUExUTFBMUJxQTFRMAAflOFSYVExQTFBMVJxQnFCcUExQTFRMUExQnFBMVExQTFRIVExQnFBMUEwANBQ=='
+      gtk_xb7_usb:
+        friendly_name: "XB7 USB"
+        command_on: 'JgA4AU4VJxQnFCcUExQnFBMVExQTFBMVExQTFCcUExUTFBMVExQTFCcUExUTAAH5TxQnFCcUJxQTFCcUExUTFBMUExUTFBMUJxQTFRMUExUTFBMUJxQTFRMAAflOFSYVJhUmFRMUJxQTFBMVExQTFRMUExQnFBMVExQTFBMVExQnFBMUEwAB+k4UJxQnFCcVExQnFBMUExUTFBMUExUTFCcUExQTFRMUExQTFSYVExQTAAH6ThQnFCcUJxQTFCcVExQTFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAflPFCcUJxQnFBMUJxQTFRMUExQTFRMUExQnFBMVExQTFBMVExQnFBMUEwAB+k4UJxUmFSYVExQnFBMUExUTFBMUExUTFCcUExQTFRMUExQTFSYVExQTAAIlCwANBQ=='
+      gtk_xb7_aux:
+        friendly_name: "XB7 AUX"
+        command_on: 'JgDGAE4UExUmFSYVJhUTFCcUJxQTFRMUExQTFSYAAqgPeU8UExQnFCcUJxQTFSYVJxQTFBMVExQTFCcAAzBOFRMUJxQnFCcUExUmFSYVExQTFBMVExQnAAMwThUTFCcUJxQnFBMUJxQnFBMVExQTFRMUJwADME4UExUmFSYVJhUTFCcUJxQTFRMUExQTFScAAzBOFRMUJxQnFCcUExQnFSYUFBQTFBMVExQnAAMvTxQTFSYVJhUmFRMUJxQnFBMVExQTFBMVJgANBQAA'
+      gtk_xb7_lights:
+        friendly_name: "XB7 Lights"
+        command_on: 'JgAMAVAUExQTFSYVExQnFBMUJxUSFRMUExQTFScUExQTFRMUExQTFSYVJhUTAAH5ThUTFBMUJxQTFScUExQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQnFBMAAfpOFRMUExQnFBMVJhUTFCcUExQTFRMUExQnFBMVExQTFBMVExQnFCcUEwAB91EUExUTFCcUExQnFBMVJxQTFBMVExQTFCcUExUTFBMUExUTFCcUJxQTAAH6ThQTFBMVJxQTFCcUExUmFRMUExQTFRMUJxQTFBMVExQTFBMVJxQnFBMAAfpOFBMUExUmFRMUJxQTFCcUFBQTFBMVExQnFBMUExUTFBMUExUmFSYVEwAJtQ0ADQUAAAAAAAAAAAAAAAA='
+      gtk_xb7_lights_rave:
+        friendly_name: "XB7 Rave"
+        command_on: 'JgCMAU4UExUTFBMUFBQTFCcUJxQTFRMUExQTFSYVExQTFBMVExQTFCcVExQTAAIhThQTFRMUExUTFBMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxUTFBMAAiFOFRMUExQTFRMUExQnFCcUFBQTFBMVExQnFBMUExUTFBMUExUmFRMUEwACIU4VExQTFBMVExQTFCcUJxQUFBMUExQTFSYVExQTFBMVExQTFCcVExQTAAIhThQTFRMUExQUFBMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAh9QFBQUExQTFBMVExQnFCcVEhUTFBMUExUmFRMUExQTFRMUExUmFRMUEwACIU4VExQTFBMVExQTFCcUJxQTFRMUExQTFScUExQTFRMUExQTFSYVExQTAAIhThUTFBMUExUTFBMUJxQnFRMUExQTFRMUJxQTFBMVExQTFBMVJhUTFBMAAiFOFRMUExQTFRMUExQnFSYVExQTFBMVExQnFBMUExUTFBMUExUmFRMUEwANBQAAAAAAAAAAAAAAAA=='
+      gtk_xb7_lights_chill:
+        friendly_name: "XB7 Chill"
+        command_on: 'JgAIAU4VJhUTFBMUExUTFCcUJxQTFRIVExQTFCcVExQTFBMVExQTFCcUExUTAAINThUmFRMUExQTFRMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAg1OFSYVExQTFBMVExQnFCcUExUTFBMUExUmFRMUExQTFRMUExQnFBMVEwACDU4VJhUTFBMUExUTFCcUJxQTFBQUExQTFSYVExQTFBMVExQTFCcUExUTAAINThUmFRMUExQTFRMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQUFBMAAg1OFSYVExQWEhMUExQnFCcUExUTFBYRExUmFRMUExQTFRMUExQnFRIVEwANBQ=='
+      gtk_xb7_extra_bass:
+        friendly_name: "XB7 Extra Bass"
+        command_on: 'JgASAU4VJhUTFCcUJxQTFBQUJxQTFBMVExQTFCcUExUTFCcAArtPFCcUExQnFCcUExUTFCcUExQTFRMUExQnFBQUExQnAAK8ThQnFBMVJhUmFRMUExQnFBMVExQTFBMVJxQTFBMVJgACvE4UJxUTFCcUJxQTFBMVJhUTFBMUExUTFCcUExQTFSYAArxOFSYVExQnFCcUExUTFCcUExQTFRMUExQnFBMVExQnOgsAAndOFCcUExQnFCcVExQTFCcUExUTFBMUExUmFRMUExQnAAK8ThQnFBMVJhUmFRMUExQnFBMVExQTFBMVJxQTFBMVJgACvE4VJhUTFCcUJxQTFBMVJhUTFBMUExUTFCcUExUSFScADQUAAAAAAAA='
 light:
   - platform: flux_led
+    # automatic_add: True
     devices:
       192.168.1.235:
         name: "desk light"
@@ -185,59 +263,78 @@ light:
       192.168.1.245:
         name: "room light"
         mode: "rgb"
+      # 192.168.1.247:
+      #   name: "bot light"
+      #   mode: "rgb"
+      #   # protocol: 'ledenet'
+      # 192.168.1.109:
+      #   name: "top light"
+      #   mode: "rgb"
+        # protocol: 'ledenet'
   - platform: group
-    name: "Mood"
+    name: "mood"
     entities:
       - light.desk_light
       - light.room_light
-  - platform: mqtt_json  
-    name: "sensornode1_rgb"  
-    state_topic: "cyfi/sensornode1"  
-    command_topic: "cyfi/sensornode1/set"  
-    brightness: true  
-    flash: true  
-    rgb: true  
-    optimistic: false  
-    qos: 0 
-  - platform: mqtt_json  
-    name: "sensornode2_rgb"  
-    state_topic: "cyfi/sensornode2"  
-    command_topic: "cyfi/sensornode2/set"  
-    brightness: true  
-    flash: true  
-    rgb: true  
-    optimistic: false  
-    qos: 0 
+      - light.lifx_d073d528a0be
+      # - light.top_light
+      # - light.bot_light
+  # - platform: group
+  #   name: "bed lights"
+  #   entities:
+  #     - light.top_light
+  #     - light.bot_light
+  ####################
+  # Sensor Node MQTT
+  ####################
+  # - platform: mqtt_json  
+  #   name: "sensornode1_rgb"  
+  #   state_topic: "cyfi/sensornode1"  
+  #   command_topic: "cyfi/sensornode1/set"  
+  #   brightness: true  
+  #   flash: true  
+  #   rgb: true  
+  #   optimistic: false  
+  #   qos: 0 
+  # - platform: mqtt_json  
+  #   name: "sensornode2_rgb"  
+  #   state_topic: "cyfi/sensornode2"  
+  #   command_topic: "cyfi/sensornode2/set"  
+  #   brightness: true  
+  #   flash: true  
+  #   rgb: true  
+  #   optimistic: false  
+  #   qos: 0 
 
 sensor:
   ###################  
   # Sensor Node - 1 # LIVING_ROOM
   ###################
-  - platform: mqtt
-    state_topic: "cyfi/sensornode1"
-    name: "sensornode1_temperature"
-    unit_of_measurement: "°C"
-    value_template: '{{ value_json.temperature | round(1) }}'
-  - platform: mqtt  
-    state_topic: "cyfi/sensornode1"  
-    name: "sensornode1_humidity"  
-    unit_of_measurement: "%"  
-    value_template: '{{ value_json.humidity | round(1) }}'  
-  - platform: mqtt  
-    state_topic: "cyfi/sensornode1"  
-    name: "sensornode1_LDR"
-    # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
-    unit_of_measurement: "Lux"  
-    value_template: '{{ value_json.ldr }}'
-  - platform: mqtt  
-    state_topic: "cyfi/sensornode1"  
-    name: "sensornode1_motion"    
-    value_template: '{{ value_json.motion }}'  
-  - platform: mqtt
-    state_topic: "cyfi/sensornode1"
-    name: "sensornode1_feelslike"
-    unit_of_measurement: "°C"
-    value_template: '{{ value_json.heatIndex | round(1) }}'
+  # - platform: mqtt
+  #   state_topic: "cyfi/sensornode1"
+  #   name: "sensornode1_temperature"
+  #   unit_of_measurement: "°C"
+  #   value_template: '{{ value_json.temperature | round(1) }}'
+  # - platform: mqtt  
+  #   state_topic: "cyfi/sensornode1"  
+  #   name: "sensornode1_humidity"  
+  #   unit_of_measurement: "%"  
+  #   value_template: '{{ value_json.humidity | round(1) }}'  
+  # - platform: mqtt  
+  #   state_topic: "cyfi/sensornode1"  
+  #   name: "sensornode1_LDR"
+  #   # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
+  #   unit_of_measurement: "Lux"  
+  #   value_template: '{{ value_json.ldr }}'
+  # - platform: mqtt  
+  #   state_topic: "cyfi/sensornode1"  
+  #   name: "sensornode1_motion"    
+  #   value_template: '{{ value_json.motion }}'  
+  # - platform: mqtt
+  #   state_topic: "cyfi/sensornode1"
+  #   name: "sensornode1_feelslike"
+  #   unit_of_measurement: "°C"
+  #   value_template: '{{ value_json.heatIndex | round(1) }}'
   ###################  
   # Sensor Node - 2 # BEDROOM
   ###################
@@ -349,7 +446,7 @@ sensor:
     name: nanopi_cpu_speed
     scan_interval: 3    
     command: cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
-    # command: cat /home/hassio/homeassistant/cpu_freq_report.txt
+    # command: cat /_____/____/homeassistant/cpu_freq_report.txt
     unit_of_measurement: "GHz"
     value_template: '{{ value | multiply(0.00000249999) | round(2) }}' # fix CPU Freq readout for NanoPi Neo Plus2
   - platform: command_line
@@ -371,42 +468,64 @@ sensor:
   - platform: time_date
     display_options:
       - time
-## TEMPLATE SENSORS      
+    ###############################
+    ## Intenet Sensor
+    ###############################
+  - platform: command_line
+    scan_interval: 7 
+    name: is_internet_up
+    command: ping -c 1 1.1.1.1 | grep "1 received" | wc -l
+    value_template: '{{ value }}'    
   - platform: template
     sensors:
-      sensornode1_motion_status:
+      internet_status:
+        friendly_name: "Internet"
         value_template: >-
-          {% if is_state('sensor.sensornode1_motion', 'standby') %}
-            Clear
+          {% if is_state('sensor.is_internet_up', '1') %}
+            Connected
           {% else %}
-            Detected
-          {% endif %}        
-        icon_template: >-
-          {% if is_state("sensor.sensornode1_motion", "standby") %}
-          mdi:walk
-          {% else %}
-          mdi:run-fast
+            Down
           {% endif %}
-  - platform: template
-    sensors:
-      sensornode2_motion_status:
-        value_template: >-
-          {% if is_state('sensor.sensornode1_motion', 'standby') %}
-            Clear
-          {% else %}
-            Detected
-          {% endif %}        
-        icon_template: >-
-          {% if is_state("sensor.sensornode1_motion", "standby") %}
-          mdi:walk
-          {% else %}
-          mdi:run-fast
-          {% endif %}
-# OTHER DEVICES
-media_player:
-  - platform: cast
-    host: 192.168.1.139
 
+    #################  
+    # Sensor Nodes
+    #################
+  # - platform: template    
+  #   sensors:
+  #     sensornode1_motion_status:
+  #       value_template: >-
+  #         {% if is_state('sensor.sensornode1_motion', 'standby') %}
+  #           Clear
+  #         {% else %}
+  #           Detected
+  #         {% endif %}        
+  #       icon_template: >-
+  #         {% if is_state("sensor.sensornode1_motion", "standby") %}
+  #         mdi:walk
+  #         {% else %}
+  #         mdi:run-fast
+  #         {% endif %}
+  # - platform: template
+  #   sensors:
+  #     sensornode2_motion_status:
+  #       value_template: >-
+  #         {% if is_state('sensor.sensornode1_motion', 'standby') %}
+  #           Clear
+  #         {% else %}
+  #           Detected
+  #         {% endif %}        
+  #       icon_template: >-
+  #         {% if is_state("sensor.sensornode1_motion", "standby") %}
+  #         mdi:walk
+  #         {% else %}
+  #         mdi:run-fast
+  #         {% endif %}
+
+# OTHER DEVICES
+cast:
+  media_player:
+    # - host: 192.168.1.139
+    - host: 192.168.1.129
 # camera:
 #   - platform: ffmpeg
 #     input: !secret cam1
@@ -419,13 +538,28 @@ media_player:
 
 # INPUT SLIDERS
 input_number:
-  fan_run_time:
-    name: "Fan Run Time"
-    initial: 4
+  switch_run_time:
+    name: "Switch Run Time"
+    initial: 6
     min: 1
-    max: 6
+    max: 12
     step: 1
-
+input_select:
+  xb7_mode:
+    name: "Speaker Mode"
+    options:
+      - XB7 Bluetooth
+      - XB7 USB
+      - XB7 Aux
+    initial: XB7 Bluetooth
+    icon: mdi:speaker-multiple
+  xb7_lights_mode:
+    name: "Lights Mode"
+    options:
+      - XB7 Rave
+      - XB7 Chill
+    initial: XB7 Rave
+    icon: mdi:car-parking-lights
 # HA_VOICE
 intent_script:
   ColorLight:

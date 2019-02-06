@@ -9,6 +9,8 @@ tts/
 home-assistant_v2.db
 home-assistant.log
 .HA_VERSION
+.cloud/
+.storage/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

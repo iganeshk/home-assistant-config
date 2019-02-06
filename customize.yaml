@@ -30,17 +30,29 @@ switch.legion:
 #     friendly_name: "Monitor"
 
 switch.sonoff_s20_1:
-    icon: mdi:ceiling-light    
-    friendly_name: "Bedroom Light"
+    icon: mdi:power-settings
+    friendly_name: "Switch S20"
 
 switch.sonoff_s31_1:
-    icon: mdi:television
-    friendly_name: "Fan"
+    icon: mdi:power-settings
+    friendly_name: "Switch S31"
 
 switch.sonoff_s31_2:
     icon: mdi:flash-circle
     friendly_name: "TV"    
 
+##################################### INTERNET SENSOR
+
+sensor.internet_status:
+  friendly_name: Internet
+  show_last_changed: true
+  templates:
+    icon: >
+      if (state === 'Connected') return 'mdi:server-network';
+      return 'mdi:server-network-off';
+    icon_color: >
+      if (state === 'Connected') return 'rgb(0, 255, 0)';
+      return 'rgb(255, 0, 0)';
 ##################################### LIGHTS
 
 light.desk_light:
@@ -52,6 +64,9 @@ light.room_light:
 light.sensornode1_rgb:
     icon: mdi:led-outline
     friendly_name: "Sensor Indicator"
+light.lifx_d073d528a0be:
+    icon: mdi:ceiling-light
+    friendly_name: "Bedroom Light"
 
 ##################################### SENSORNODE - 1 (LIVING_ROOM)
 sensor.sensornode1_temperature:

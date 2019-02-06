@@ -2,18 +2,18 @@
   trigger:
     platform: sun
     event: sunset
-    offset: "-01:00:00"
+    offset: "-00:20:00"
   action: 
-    service: switch.turn_on
-    entity_id: switch.sonoff_s20_1
+    service: light.turn_on
+    entity_id: light.lifx_d073d528a0be
 
 - alias: 'Turn off Bedroom lights by night'
   trigger:
     - platform: time
       at: '23:00:00'
   action: 
-    service: switch.turn_off
-    entity_id: switch.sonoff_s20_1
+    service: light.turn_off
+    entity_id: light.lifx_d073d528a0be
 
 # - alias: 'Flash Sensor 1 Start'
 #   initial_state: True
@@ -44,20 +44,69 @@
 #     service: script.turn_off
 #     entity_id: script.flash_sensor1_light   
 
-- alias: 'Fan Auto Off'
+# Auto Fan Power Cut off (default)
+- alias: "Changing Mood"
+  trigger:
+    platform: state
+    entity_id: light.mood
+    from: 'off'
+    to: 'on'
+  action:
+    service: notify.LM2216
+    data:
+      message: "Mood!"
+      data:
+        sound: 'bicycle'
+        # sound: 'knock-knock'
+        icon: 'a17328'
+        cycles: 1
+        priority: 'info'
+
+- alias: "Changing Mood from on"
+  trigger:
+    platform: event
+    event_type: call_service
+    event_data:
+      domain: light
+      # entity_id: mood
+      service: turn_on
+  action:
+    service: notify.LM2216
+    data:
+      message: 'Lights'
+      # message: '{{ trigger.to_state.attributes.friendly_name }} changed'
+      data:
+        # sound: 'bicycle'
+        icon: 'a17328'
+        cycles: 1
+        priority: 'info'
+
+- alias: 'Auto Switch Off'
+  initial_state: False
   trigger:
     - platform: state
       entity_id: switch.sonoff_s31_1
       to: 'on'
   action:
     - service: script.turn_on
-      entity_id: script.fan_timer
+      entity_id: script.switch_controller
 
-- alias: 'Fan Reset Timer'
+- alias: 'Reset Auto Switch'
   trigger:
     - platform: state
       entity_id: switch.sonoff_s31_1
       to: 'off'
   action:
     - service: script.turn_off
-      entity_id: script.fan_timer
+      entity_id: script.switch_controller
+
+# - alias: Set Speaker Mode
+#   trigger:
+#     platform: state
+#     entity_id: input_select.xb7_mode
+#   action:
+#     service: switch.turn_on
+#     data_template:
+#       topic: "thermostatMode"
+#       retain: true
+#       payload: "{{ states('input_select.thermostat_mode') }}"
