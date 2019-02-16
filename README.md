@@ -1,6 +1,6 @@
 <h1 align="center">
   <a href="https://github.com/iganeshk/home-assistant-config/" title="Home Assistant Config">
-    <img alt="Home Assistant Config" src="https://github.com/iganeshk/home-assistant-config/raw/master/ha_logo.png" width="50%"/>
+    <img alt="Home Assistant Config" src="https://github.com/iganeshk/home-assistant-config/raw/master/ha_logo.png" width="15%"/>
   </a>
   <br />
   Home Assistant
