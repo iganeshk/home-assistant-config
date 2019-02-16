@@ -2,8 +2,8 @@ default_view:
   view: yes
   icon: mdi:home
   entities:
-    - group.people    
-    - group.home
+    # - group.people    
+    # - group.home
     # - group.living_room
     # - group.bedroom
     - group.workstation
@@ -48,22 +48,22 @@ people:
   icon: mdi:account-multiple
   name: "People"
   entities:
-    - device_tracker.ganesh_s8plus
-    - device_tracker.anirudh_iphone
+    # - device_tracker.ganesh_s8plus
+    # - device_tracker.anirudh_iphone
     # - device_tracker.ram_note
 home:  
   control: hidden
   icon: mdi:home
   name: "Home"
   entities:
-    - sensor.sensornode1_feelslike    
-    - sensor.sensornode1_temperature
-    - sensor.sensornode1_humidity
-    - sensor.sensornode1_LDR    
-    # - sensor.sensornode1_motion
-    - sensor.sensornode1_motion_status
-    - light.sensornode1_rgb
-    - camera.ffmpeg
+    # - sensor.sensornode1_feelslike    
+    # - sensor.sensornode1_temperature
+    # - sensor.sensornode1_humidity
+    # - sensor.sensornode1_LDR    
+    # # - sensor.sensornode1_motion
+    # - sensor.sensornode1_motion_status
+    # - light.sensornode1_rgb
+    # - camera.ffmpeg
 
 living_room:
   control: hidden
