@@ -21,9 +21,14 @@ group.home:
 #     icon: mdi:television
 #     friendly_name: "Bedroom TV"
 
-switch.legion:
-    icon: mdi:desktop-classic
-    friendly_name: "Legion"
+switch.apex:
+    icon: mdi:power
+    # icon: mdi:desktop-tower-monitor
+    friendly_name: "Apex"
+
+switch.lock_apex:
+    icon: mdi:monitor-lock
+    friendly_name: "Lock Apex"
 
 # switch.jinvoo_2:
 #     icon: mdi:monitor
@@ -43,23 +48,24 @@ switch.sonoff_s31_2:
 
 ##################################### INTERNET SENSOR
 
-sensor.internet_status:
-  friendly_name: Internet
-  show_last_changed: true
-  templates:
-    icon: >
-      if (state === 'Connected') return 'mdi:server-network';
-      return 'mdi:server-network-off';
-    icon_color: >
-      if (state === 'Connected') return 'rgb(0, 255, 0)';
-      return 'rgb(255, 0, 0)';
+# sensor.internet_status:
+#   friendly_name: Internet
+#   show_last_changed: true
+#   templates:
+#     icon: >
+#       if (state === 'Connected') return 'mdi:server-network';
+#       return 'mdi:server-network-off';
+#     icon_color: >
+#       if (state === 'Connected') return 'rgb(0, 255, 0)';
+#       return 'rgb(255, 0, 0)';
+
 ##################################### LIGHTS
 
 light.desk_light:
-    icon: mdi:table-settings
+    icon: mdi:desk-lamp
     friendly_name: "Desk Light"
 light.room_light:
-    icon: mdi:table-settings
+    icon: mdi:lamp
     friendly_name: "Room Light"
 light.sensornode1_rgb:
     icon: mdi:led-outline
@@ -171,6 +177,19 @@ sensor.nanopi_network_usage:
 sensor.server_uptime:
     icon: mdi:av-timer
     friendly_name: "Server Uptime"
+
+sensor.ha_db:
+    icon: mdi:database
+    friendly_name: "HA DB Size"
+sensor.ha_update_found:
+    friendly_name: "HA Latest"
+    templates:
+        rgb_color: >-
+            {% if (states('sensor.ha_latest_version')) > (states('sensor.current_version')) %}
+              [68, 115, 158]
+            {% else %}
+              [253, 216, 53]
+            {% endif %}
 sensor.ha_uptime:
     icon: mdi:timelapse
     friendly_name: "HA Uptime"

@@ -1,0 +1,322 @@
+title: Home
+background: var(--background-image)
+#resources:
+#  - url: /local/mini-media-player-bundle.js?v=0.9.8
+#    type: js
+resources:
+  - url: /customcards/github/custom-cards/tracker-card.js?track=true
+    type: module
+  - url: /customcards/github/custom-cards/button-card.js?track=true
+    type: module
+  - url: /customcards/github/maykar/compact-custom-header.js?track=true
+    type: module    
+  - url: /local/lovelace/mini-graph-card-bundle.js?track=true
+    type: module
+  - url: /local/lovelace/mini-media-player-bundle.js?track=true
+    type: module 
+
+views:
+  - title: Home
+    icon: mdi:home-outline
+
+    badges:
+      # - device_tracker.juan_s9
+      # - device_tracker.antonette_s8
+    cards:
+      - type: custom:compact-custom-header
+        main_config: true
+
+#### LIGHTS ####
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: >
+              ## Lights
+          - type: horizontal-stack
+            cards:
+              - type: entity-button
+                entity: light.mood
+                name: Mood
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info
+              - type: entity-button
+                entity: light.lifx_d073d528a0be
+                name: Living Room
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info                  
+              - type: entity-button
+                entity: light.desk_light
+                name: Desk
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info                  
+              - type: entity-button
+                entity: light.room_light
+                name: Bedroom
+                tap_action:
+                  action: toggle
+                hold_action:
+                  action: more-info                  
+#
+# #### Home Speakers ####
+#           - type: conditional
+#             conditions:
+#               - entity: media_player.home_speakers
+#                 state_not: "off"
+#               - entity: media_player.home_speakers
+#                 state_not: "unavailable"
+#             card:
+#               type: media-control
+#               entity: media_player.home_speakers
+#
+#### COMPUTER ####
+      # - type: vertical-stack
+      #   cards:
+          # - type: markdown
+          #   content: >
+          #     ## Workstation
+          # - type: horizontal-stack
+          #   cards:
+          #     - type: entity-button
+          #       entity: switch.apex
+          #       name: APEX
+          #       tap_action:
+          #         action: toggle
+          #     - type: entity-button
+          #       entity: script.lock_apex
+          #       name: Lock
+          #       tap_action:
+          #         action: toggle
+          - type: picture-glance
+            title: "Workstation"
+            state_image:
+              "on": /local/states/workstation.jpg
+              "off": /local/states/workstation_off.jpg
+            entity: switch.apex
+            entities:
+              - switch.apex
+              - switch.lock_apex
+              - light.desk_light
+#### INTERNET ####
+      # - type: vertical-stack
+      #   cards:
+      #     # - type: markdown
+      #     #   content: >
+      #     #     ## Internet
+      #     - type: horizontal-stack
+      #       cards:
+      #         - type: custom:mini-graph-card
+      #           name: Internet
+      #           icon: mdi:server                
+      #           entities:
+      #             - sensor.internet_status
+      #           # line_color: '#b58e31'
+      #           line_width: 3
+      #           upper_bound: 1
+      #           hours_to_show: 4
+      #           show:
+      #             fill: true
+      #             labels: false
+      #           color_thresholds:
+      #             - value: 1
+      #               color: "#ff0000"
+      #             - value: 0
+      #               color: "#00ff00"                
+      #           align_icon: left
+      #           align_state: center
+      #     - type: custom:mini-graph-card
+      #       entities:
+      #         - sensor.internet_status
+      #       line_color: blue
+      #       line_width: 8
+      #       font_size: 75
+
+###### NETWORK
+      - type: horizontal-stack
+        cards:
+          - type: vertical-stack
+            cards:
+            - type: markdown
+              content: >
+                ## Network              
+            # - type: "custom:button-card"
+            #   color_type: card
+            #   name: 'NETWORK'
+            #   style:
+            #     - font-size: 14px
+            #     - font-weight: bold
+            #     - background-color: rgb(34, 35, 58)
+            #     - height: 24px
+            #     - padding: 3px          
+            - type: horizontal-stack
+              cards:                
+              - type: "custom:button-card"
+                entity: sensor.internet_status_card
+                icon: mdi:wan
+                style:
+                  - padding: 10px
+                  - height: 100px
+                show_state: true
+                state:
+                  - value: 'Online'
+                    color: rgb(0, 175, 23)
+                    icon: mdi:server-network
+                  - value: 'Offline'
+                    color: rgb(219, 0, 0)
+                    icon: mdi:server-network-off
+              - type: "custom:button-card"
+                # color_type: card
+                # color: rgb(28, 128, 199)
+                entity: sensor.wan_ip
+                name: 'WAN IP:'
+                action: more_info
+                show_state: true
+                style:
+                  - padding: 10px
+                  - height: 100px
+            # - type: custom:mini-graph-card
+            #   entities:
+            #     - entity: sensor.internet_status
+            #   hours_to_show: 24
+            #   decimals: 0
+            #   name: Internet Status
+            #   upper_bound: 1
+            #   lower_bound: 0
+            #   points_per_hour: 0.01
+            #   show:
+            #     # graph: bar
+            #     icon: true
+            #   color_thresholds:
+            #     - value: 1
+            #       color: "#ff0000"
+            #     - value: 0
+            #       color: "#00ff00"
+            # - type: custom:mini-graph-card
+            #   entities:
+            #     - sensor.internet_status
+            #   upper_bound: 1
+            #   lower_bound: 0
+            #   show:
+            #     labels: false
+            #     fill: true
+            #   color_thresholds:
+            #     - value: 0
+            #       color: "#f39c12"
+            #     - value: 1
+            #       color: "#d35400"
+  - title: Nano
+    icon: mdi:home-assistant
+    cards:
+      - type: custom:compact-custom-header
+        main_config: true
+##### HOME ASSISTANT
+      - type: horizontal-stack
+        cards:
+        - type: vertical-stack
+          cards:
+          - type: "custom:button-card"
+            color_type: card
+            name: 'NanoPi HWiNFO'
+            style:
+              - background-color: inherit
+              # - background-color: rgb(34, 35, 58)
+              - font-size: 20px
+              - font-weight: bold
+              - height: 35px
+              - padding: 6px
+          - type: horizontal-stack
+            cards:
+            - type: entities
+              entities:
+                - sensor.nanopi_cpu_usage
+                - sensor.nanopi_cpu_speed
+                - sensor.nanopi_network_usage
+                - sensor.nanopi_memory_usage
+                - sensor.nanopi_disk_usage
+                - sensor.nanopi_temps
+                - sensor.server_uptime
+              show_header_toggle: false
+          - type: horizontal-stack
+            cards:
+            - type: "custom:button-card"
+              color_type: card
+              color: rgb(223, 255, 97)
+              entity: sensor.config
+              name: 'Config:'
+              show_state: true
+              action: more_info
+              style:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+                - height: 24px
+                - padding: 3px
+            - type: "custom:button-card"
+              color_type: card
+              color: rgb(28, 128, 199)
+              entity: sensor.database_home_assistant
+              name: 'Database:'
+              show_state: true
+              action: more_info
+              style:
+                - font-size: 14px
+                - background-color: rgb(34, 35, 37)
+                - height: 24px
+                - padding: 3px
+      - type: horizontal-stack
+        cards:
+        - type: vertical-stack
+          cards:
+          - type: "custom:button-card"
+            color_type: card
+            name: "Home Assistant"
+            entity: weblink.release_log
+            action: more_info
+            style:
+              - background-color: inherit
+              # - background-color: rgb(34, 35, 58)
+              - font-size: 20px
+              - font-weight: bold
+              - height: 35px
+              - padding: 6px
+          - type: horizontal-stack
+            cards:
+            - type: entities
+              entities:             
+                - sensor.current_version
+                - sensor.ha_update_found                
+                - sensor.ha_uptime
+                - sensor.ha_db
+              show_header_toggle: false    
+          - type: custom:tracker-card
+
+          # - type: horizontal-stack
+          #   cards:
+          #   - type: "custom:button-card"
+          #     color_type: card
+          #     color: rgb(223, 255, 97)
+          #     entity: sensor.home_assistant_config_issues
+          #     name: 'Open Issues:'
+          #     show_state: true
+          #     action: more_info
+          #     style:
+          #       - font-size: 14px
+          #       - background-color: rgb(34, 35, 37)
+          #       - height: 24px
+          #       - padding: 3px
+          #   - type: "custom:button-card"
+          #     color_type: card
+          #     color: rgb(28, 128, 199)
+          #     entity: sensor.home_assistant_config_stars
+          #     name: 'Stars:'
+          #     show_state: true
+          #     action: more_info
+          #     style:
+          #       - font-size: 14px
+          #       - background-color: rgb(34, 35, 37)
+          #       - height: 24px
+          #       - padding: 3px

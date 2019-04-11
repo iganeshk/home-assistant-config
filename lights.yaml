@@ -1,0 +1,51 @@
+- platform: flux_led
+  # automatic_add: True
+  devices:
+    192.168.1.235:
+      name: "desk light"
+      mode: "rgb"
+    192.168.1.245:
+      name: "room light"
+      mode: "rgb"
+    # 192.168.1.247:
+    #   name: "bot light"
+    #   mode: "rgb"
+    #   # protocol: 'ledenet'
+    # 192.168.1.109:
+    #   name: "top light"
+    #   mode: "rgb"
+      # protocol: 'ledenet'
+- platform: group
+  name: "mood"
+  entities:
+    - light.desk_light
+    - light.room_light
+    - light.lifx_d073d528a0be
+    # - light.top_light
+    # - light.bot_light
+# - platform: group
+#   name: "bed lights"
+#   entities:
+#     - light.top_light
+#     - light.bot_light
+####################
+# Sensor Node MQTT
+####################
+# - platform: mqtt_json  
+#   name: "sensornode1_rgb"  
+#   state_topic: "cyfi/sensornode1"  
+#   command_topic: "cyfi/sensornode1/set"  
+#   brightness: true  
+#   flash: true  
+#   rgb: true  
+#   optimistic: false  
+#   qos: 0 
+# - platform: mqtt_json  
+#   name: "sensornode2_rgb"  
+#   state_topic: "cyfi/sensornode2"  
+#   command_topic: "cyfi/sensornode2/set"  
+#   brightness: true  
+#   flash: true  
+#   rgb: true  
+#   optimistic: false  
+#   qos: 0 

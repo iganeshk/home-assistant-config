@@ -1,0 +1,135 @@
+##############################
+##### iSelectors - pyTua Api
+##############################
+# - platform: tuya
+#   name: jinvoo_1
+#   host: 192.168.1.223
+#   local_key: !secret jinvoo1_key
+#   device_id: !secret jinvoo1_id
+#   # id: 0
+# - platform: tuya
+#   name: jinvoo_2
+#   host: 192.168.1.249
+#   local_key: !secret jinvoo2_key
+#   device_id: !secret jinvoo2_id
+####################
+##### SonOffs
+####################
+- platform: mqtt
+  name: sonoff_s20_1
+  state_topic: stat/sonoff_s20_1/POWER
+  command_topic: cmnd/sonoff_s20_1/POWER
+  # availability_topic: stat/sonoff_s20_1/POWER
+  qos: 1
+  payload_on: "ON"
+  payload_off: "OFF"
+  retain: true
+- platform: mqtt
+  name: sonoff_s31_1
+  state_topic: stat/sonoff_s31_1/POWER
+  command_topic: cmnd/sonoff_s31_1/POWER   
+  qos: 1
+  payload_on: "ON"
+  payload_off: "OFF"
+  retain: true
+- platform: mqtt
+  name: sonoff_s31_2
+  state_topic: stat/sonoff_s31_2/POWER
+  command_topic: cmnd/sonoff_s31_2/POWER
+  qos: 1
+  payload_on: "ON"
+  payload_off: "OFF"
+  retain: true
+####################
+##### Workstation
+####################
+- platform: wake_on_lan
+  name: apex
+  scan_interval: 5
+  mac_address: !secret cobalt-60-mac
+  host: !secret cobalt-60-ip
+  turn_off:
+      service: shell_command.shutdown_apex
+####################
+##### Switch Auto Control
+####################
+- platform: template
+  switches:
+    switch_auto_control:
+      friendly_name: "Switch Auto Control"
+      icon_template: >-
+        {% if is_state('automation.auto_switch_off', 'on') %}
+          mdi:timer
+        {% else %}
+          mdi:timer-off
+        {% endif %}  
+      value_template: "{{ is_state('automation.auto_switch_off', 'on') }}"
+      turn_on:
+        service: automation.turn_on
+        entity_id: automation.auto_switch_off
+      turn_off:
+        service: automation.turn_off
+        entity_id: automation.auto_switch_off 
+    lock_apex:
+      friendly_name: "Lock Apex"
+      value_template: "{{ is_state('script.lock_apex', 'on') }}"
+      turn_on:
+        service: script.turn_on
+        entity_id: script.lock_apex      
+      turn_off:
+        service: script.turn_on
+        entity_id: script.lock_apex      
+
+####################
+##### Gateway Status
+####################
+# binary_sensor:
+#   - platform: command_line
+#     command: 'ping -c 1 8.8.8.8 | grep "1 received" | wc -l'
+#     name: 'is_internet_up'
+#     sensor_class: connectivity
+#     payload_on: 1
+#     payload_off: 0
+#     scan_interval: 10
+#     command_timeout: 2
+
+- platform: broadlink
+  host: 192.168.1.165
+  mac: '78:0F:77:D9:2A:5C'
+  timeout: 15
+  type: rm_mini
+  switches:
+    # SONY GTK-XB7
+    gtk_xb7:
+      friendly_name: "Speaker"
+      command_on: 'JgCsAAsAB2BOFScUExQnFBMVJhUTFBMUExUTFBMUFBQnAANXThUmFRMUJxQTFSYVExQTFBMVExQTFBMVJgADWE4UJxUTFCcUExQnFBMVExQTFBMVExQTFCcAA1hOFCcUExQnFBMVJxQTFBMVExQTFBMVExQnAANXThUmFRMUJxQTFCcVExQTFBMVExQTFBMVJgADWE4VJhUTFCcUExQnFBMVExQTFBMVExQTFCcADQUAAAAAAAAAAAAAAAA='
+      command_off: 'JgCsAAsAB2BOFScUExQnFBMVJhUTFBMUExUTFBMUFBQnAANXThUmFRMUJxQTFSYVExQTFBMVExQTFBMVJgADWE4UJxUTFCcUExQnFBMVExQTFBMVExQTFCcAA1hOFCcUExQnFBMVJxQTFBMVExQTFBMVExQnAANXThUmFRMUJxQTFCcVExQTFBMVExQTFBMVJgADWE4VJhUTFCcUExQnFBMVExQTFBMVExQTFCcADQUAAAAAAAAAAAAAAAA='
+    gtk_xb7_vol_up:
+      friendly_name: "Speaker Volume Up"
+      command_on: 'JgCMAE4UExUmFRMUExQnFBMVExQTFBMVExQTFCcAA2tOFRMUJxQTFBQUJxQTFBMVExQTFBMVExQnAANrThQTFSYVExQTFCcUExUTFBMUFBQTFBMVJgADa08UExQnFBMVExQnFBMUExUTFBMUExUTFCcAA2tOFBMVJxQTFBMVJhUTFBMUExUTFBMUExUmAA0FAAAAAAAAAAAAAAAA'
+    gtk_xb7_vol_down:
+      friendly_name: "Speaker Volume Down"
+      command_on: 'JgDkAAsAC31OFCcUJxQTFRMUJxQTFBMVExQTFBMVExQnAANXTxQnFCcUExQTFSYVExQTFBMVExQTFBMVJwADV04VJhUmFRMUExQnFRMUExQTFRMUExQTFSYAA1hOFCcUJxUTFBMUJxQTFRMUExQTFRMUExQnAANYThQnFCcUExUTFCcUExQTFRMUExQTFRMUJwADWE4UJxQnFBMVExQnFBMUExUTFBMUExUTFCcAA1dOFSYVJhUTFBMUJxUTFBMUExUTFBMUExUmAANYThQnFCcUFBQTFCcUExUTFBMUExUTFBMUJwANBQAAAAA='
+    gtk_xb7_bluetooth:
+      friendly_name: "Speaker Bluetooth"
+      command_on: 'JgAIAU4UJxQTFRMUExQnFCcUJxQTFRMUExQTFScUExQTFRMUExQTFSYVExQTAAH6ThQnFBMUExUTFCcUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAfpOFCcUExQTFRMUJxQnFCcUExUTFBMUExUmFRMUExQTFRMUExQnFBMVEwAB+k4UJxQTFBMVExQnFCcUJxQTFRMUExQTFSYVExQTFBMVExQTFCcUExUTAAH5ThUnFBMUExUTFCcUJxQnFBMUExUTFBMUJxUSFRMUExUTFBMUJxQTFRMAAflOFSYVExQTFBMVJxQnFCcUExQTFRMUExQnFBMVExQTFRIVExQnFBMUEwANBQ=='
+    gtk_xb7_usb:
+      friendly_name: "Speaker USB"
+      command_on: 'JgA4AU4VJxQnFCcUExQnFBMVExQTFBMVExQTFCcUExUTFBMVExQTFCcUExUTAAH5TxQnFCcUJxQTFCcUExUTFBMUExUTFBMUJxQTFRMUExUTFBMUJxQTFRMAAflOFSYVJhUmFRMUJxQTFBMVExQTFRMUExQnFBMVExQTFBMVExQnFBMUEwAB+k4UJxQnFCcVExQnFBMUExUTFBMUExUTFCcUExQTFRMUExQTFSYVExQTAAH6ThQnFCcUJxQTFCcVExQTFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAflPFCcUJxQnFBMUJxQTFRMUExQTFRMUExQnFBMVExQTFBMVExQnFBMUEwAB+k4UJxUmFSYVExQnFBMUExUTFBMUExUTFCcUExQTFRMUExQTFSYVExQTAAIlCwANBQ=='
+    gtk_xb7_aux:
+      friendly_name: "Speaker AUX"
+      command_on: 'JgDGAE4UExUmFSYVJhUTFCcUJxQTFRMUExQTFSYAAqgPeU8UExQnFCcUJxQTFSYVJxQTFBMVExQTFCcAAzBOFRMUJxQnFCcUExUmFSYVExQTFBMVExQnAAMwThUTFCcUJxQnFBMUJxQnFBMVExQTFRMUJwADME4UExUmFSYVJhUTFCcUJxQTFRMUExQTFScAAzBOFRMUJxQnFCcUExQnFSYUFBQTFBMVExQnAAMvTxQTFSYVJhUmFRMUJxQnFBMVExQTFBMVJgANBQAA'
+    gtk_xb7_lights:
+      friendly_name: "SpeakaLite"
+      command_on: 'JgAMAVAUExQTFSYVExQnFBMUJxUSFRMUExQTFScUExQTFRMUExQTFSYVJhUTAAH5ThUTFBMUJxQTFScUExQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQnFBMAAfpOFRMUExQnFBMVJhUTFCcUExQTFRMUExQnFBMVExQTFBMVExQnFCcUEwAB91EUExUTFCcUExQnFBMVJxQTFBMVExQTFCcUExUTFBMUExUTFCcUJxQTAAH6ThQTFBMVJxQTFCcUExUmFRMUExQTFRMUJxQTFBMVExQTFBMVJxQnFBMAAfpOFBMUExUmFRMUJxQTFCcUFBQTFBMVExQnFBMUExUTFBMUExUmFSYVEwAJtQ0ADQUAAAAAAAAAAAAAAAA='
+      command_off: 'JgAMAVAUExQTFSYVExQnFBMUJxUSFRMUExQTFScUExQTFRMUExQTFSYVJhUTAAH5ThUTFBMUJxQTFScUExQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQnFBMAAfpOFRMUExQnFBMVJhUTFCcUExQTFRMUExQnFBMVExQTFBMVExQnFCcUEwAB91EUExUTFCcUExQnFBMVJxQTFBMVExQTFCcUExUTFBMUExUTFCcUJxQTAAH6ThQTFBMVJxQTFCcUExUmFRMUExQTFRMUJxQTFBMVExQTFBMVJxQnFBMAAfpOFBMUExUmFRMUJxQTFCcUFBQTFBMVExQnFBMUExUTFBMUExUmFSYVEwAJtQ0ADQUAAAAAAAAAAAAAAAA='
+    gtk_xb7_lights_rave:
+      friendly_name: "Rave Mode"
+      command_on: 'JgCMAU4UExUTFBMUFBQTFCcUJxQTFRMUExQTFSYVExQTFBMVExQTFCcVExQTAAIhThQTFRMUExUTFBMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxUTFBMAAiFOFRMUExQTFRMUExQnFCcUFBQTFBMVExQnFBMUExUTFBMUExUmFRMUEwACIU4VExQTFBMVExQTFCcUJxQUFBMUExQTFSYVExQTFBMVExQTFCcVExQTAAIhThQTFRMUExQUFBMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAh9QFBQUExQTFBMVExQnFCcVEhUTFBMUExUmFRMUExQTFRMUExUmFRMUEwACIU4VExQTFBMVExQTFCcUJxQTFRMUExQTFScUExQTFRMUExQTFSYVExQTAAIhThUTFBMUExUTFBMUJxQnFRMUExQTFRMUJxQTFBMVExQTFBMVJhUTFBMAAiFOFRMUExQTFRMUExQnFSYVExQTFBMVExQnFBMUExUTFBMUExUmFRMUEwANBQAAAAAAAAAAAAAAAA=='
+    gtk_xb7_lights_chill:
+      friendly_name: "Chill Mode"
+      command_on: 'JgAIAU4VJhUTFBMUExUTFCcUJxQTFRIVExQTFCcVExQTFBMVExQTFCcUExUTAAINThUmFRMUExQTFRMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAg1OFSYVExQTFBMVExQnFCcUExUTFBMUExUmFRMUExQTFRMUExQnFBMVEwACDU4VJhUTFBMUExUTFCcUJxQTFBQUExQTFSYVExQTFBMVExQTFCcUExUTAAINThUmFRMUExQTFRMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQUFBMAAg1OFSYVExQWEhMUExQnFCcUExUTFBYRExUmFRMUExQTFRMUExQnFRIVEwANBQ=='
+    gtk_xb7_extra_bass:
+      friendly_name: "Extra Bass"
+      command_on: 'JgASAU4VJhUTFCcUJxQTFBQUJxQTFBMVExQTFCcUExUTFCcAArtPFCcUExQnFCcUExUTFCcUExQTFRMUExQnFBQUExQnAAK8ThQnFBMVJhUmFRMUExQnFBMVExQTFBMVJxQTFBMVJgACvE4UJxUTFCcUJxQTFBMVJhUTFBMUExUTFCcUExQTFSYAArxOFSYVExQnFCcUExUTFCcUExQTFRMUExQnFBMVExQnOgsAAndOFCcUExQnFCcVExQTFCcUExUTFBMUExUmFRMUExQnAAK8ThQnFBMVJhUmFRMUExQnFBMVExQTFBMVJxQTFBMVJgACvE4VJhUTFCcUJxQTFBMVJhUTFBMUExUTFCcUExUSFScADQUAAAAAAAA='
+      command_off: 'JgASAU4VJhUTFCcUJxQTFBQUJxQTFBMVExQTFCcUExUTFCcAArtPFCcUExQnFCcUExUTFCcUExQTFRMUExQnFBQUExQnAAK8ThQnFBMVJhUmFRMUExQnFBMVExQTFBMVJxQTFBMVJgACvE4UJxUTFCcUJxQTFBMVJhUTFBMUExUTFCcUExQTFSYAArxOFSYVExQnFCcUExUTFCcUExQTFRMUExQnFBMVExQnOgsAAndOFCcUExQnFCcVExQTFCcUExUTFBMUExUmFRMUExQnAAK8ThQnFBMVJhUmFRMUExQnFBMVExQTFBMVJxQTFBMVJgACvE4VJhUTFCcUJxQTFBMVJhUTFBMUExUTFCcUExUSFScADQUAAAAAAAA='

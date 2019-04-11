@@ -6,6 +6,14 @@ switch_controller:
       data:
         entity_id: switch.sonoff_s31_1
 
+####################
+##### LOCK PC
+####################
+lock_apex:
+  alias: "Lock Apex"
+  sequence:
+    - service: shell_command.lock_apex
+
 # flash_node1:
 #   alias: flash_sensor1_light
 #   sequence:

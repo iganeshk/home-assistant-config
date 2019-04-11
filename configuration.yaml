@@ -28,7 +28,8 @@ frontend:
     - /local/custom_ui/state-card-custom-ui.html
   extra_html_url_es5:
     - /local/custom_ui/state-card-custom-ui-es5.html  
-  themes: !include themes.yaml
+  themes: !include_dir_merge_named themes
+  javascript_version: latest
   # themes:
   #   happy:
   #     primary-color: pink
@@ -36,6 +37,9 @@ frontend:
   #     primary-color: blue
   #   night:
   #     primary-color: darkred
+
+lovelace:
+  mode: yaml
 
 # Enables configuration UI
 config:
@@ -57,8 +61,16 @@ conversation:
      - Change the mood to [the color] {color}  
 
 lametric:
-  client_id: b9b92b3f-711f-bf8a-5f1d-b204d5ecb235
-  client_secret: JDEkOXZXZGlraW8kSnNYdVZ0T1NEckVNbmlxVTgxMlFYMQ==
+  client_id: !secret la_client_id
+  client_secret: !secret la_client_secret
+
+notify:
+  name: LM2216
+  platform: lametric
+  # icon: a25544
+  # lifetime: 7
+  # cycles: 1
+  # priority: warning
 
 # device_tracker:
 #   - platform: owntracks_http
@@ -70,7 +82,7 @@ lametric:
   #   #dhcp_software: dnsmasq
   #   track_new_devices: yes
 # Enables support for tracking state changes over time
-# history:
+history:
 
 # View all events in a logbook
 # logbook:
@@ -118,403 +130,13 @@ mqtt:
   password: !secret mqtt_broker_pass
 
 shell_command:
-  ##shutdown_legion: "net rpc shutdown -f -t time -C 'message' -U username%password -I ip_address"
-  shutdown_legion: !secret cobalt-60-rpc-down
+  ##shutdown_apex: "net rpc shutdown -f -t time -C 'message' -U username%password -I ip_address"
+  shutdown_apex: !secret cobalt-60-rpc-down
+  lock_apex: !secret cobalt-60-rpc-lock
 
-switch:
-##############################
-##### iSelectors - pyTua Api
-##############################
-  # - platform: tuya
-  #   name: jinvoo_1
-  #   host: 192.168.1.223
-  #   local_key: !secret jinvoo1_key
-  #   device_id: !secret jinvoo1_id
-  #   # id: 0
-  # - platform: tuya
-  #   name: jinvoo_2
-  #   host: 192.168.1.249
-  #   local_key: !secret jinvoo2_key
-  #   device_id: !secret jinvoo2_id
-####################
-##### SonOffs
-####################
-  - platform: mqtt
-    name: sonoff_s20_1
-    state_topic: stat/sonoff_s20_1/POWER
-    command_topic: cmnd/sonoff_s20_1/POWER
-    # availability_topic: stat/sonoff_s20_1/POWER
-    qos: 1
-    payload_on: "ON"
-    payload_off: "OFF"
-    retain: true
-  - platform: mqtt
-    name: sonoff_s31_1
-    state_topic: stat/sonoff_s31_1/POWER
-    command_topic: cmnd/sonoff_s31_1/POWER   
-    qos: 1
-    payload_on: "ON"
-    payload_off: "OFF"
-    retain: true
-  - platform: mqtt
-    name: sonoff_s31_2
-    state_topic: stat/sonoff_s31_2/POWER
-    command_topic: cmnd/sonoff_s31_2/POWER
-    qos: 1
-    payload_on: "ON"
-    payload_off: "OFF"
-    retain: true
-####################
-##### Workstation
-####################
-  - platform: wake_on_lan
-    name: legion
-    scan_interval: 5
-    mac_address: "0C-9D-92-7F-C7-4C"
-    host: 192.168.1.100
-    turn_off:
-        service: shell_command.shutdown_legion
-####################
-##### Switch Auto Control
-####################
-  - platform: template
-    switches:
-      switch_auto_control:
-        friendly_name: "Switch Auto Control"
-        icon_template: >-
-          {% if is_state('automation.auto_switch_off', 'on') %}
-            mdi:timer
-          {% else %}
-            mdi:timer-off
-          {% endif %}  
-        value_template: "{{ is_state('automation.auto_switch_off', 'on') }}"
-        turn_on:
-          service: automation.turn_on
-          entity_id: automation.auto_switch_off
-        turn_off:
-          service: automation.turn_off
-          entity_id: automation.auto_switch_off 
-
-####################
-##### Gateway Status
-####################
-# binary_sensor:
-#   - platform: command_line
-#     command: 'ping -c 1 8.8.8.8 | grep "1 received" | wc -l'
-#     name: 'is_internet_up'
-#     sensor_class: connectivity
-#     payload_on: 1
-#     payload_off: 0
-#     scan_interval: 10
-#     command_timeout: 2
-
-  - platform: broadlink
-    host: 192.168.1.165
-    mac: '78:0F:77:D9:2A:5C'
-    timeout: 15
-    type: rm_mini
-    switches:
-      # SONY GTK-XB7
-      gtk_xb7:
-        friendly_name: "Speaker"
-        command_on: 'JgCsAAsAB2BOFScUExQnFBMVJhUTFBMUExUTFBMUFBQnAANXThUmFRMUJxQTFSYVExQTFBMVExQTFBMVJgADWE4UJxUTFCcUExQnFBMVExQTFBMVExQTFCcAA1hOFCcUExQnFBMVJxQTFBMVExQTFBMVExQnAANXThUmFRMUJxQTFCcVExQTFBMVExQTFBMVJgADWE4VJhUTFCcUExQnFBMVExQTFBMVExQTFCcADQUAAAAAAAAAAAAAAAA='
-        command_off: 'JgCsAAsAB2BOFScUExQnFBMVJhUTFBMUExUTFBMUFBQnAANXThUmFRMUJxQTFSYVExQTFBMVExQTFBMVJgADWE4UJxUTFCcUExQnFBMVExQTFBMVExQTFCcAA1hOFCcUExQnFBMVJxQTFBMVExQTFBMVExQnAANXThUmFRMUJxQTFCcVExQTFBMVExQTFBMVJgADWE4VJhUTFCcUExQnFBMVExQTFBMVExQTFCcADQUAAAAAAAAAAAAAAAA='
-      gtk_xb7_vol_up:
-        friendly_name: "Speaker Volume Up"
-        command_on: 'JgCMAE4UExUmFRMUExQnFBMVExQTFBMVExQTFCcAA2tOFRMUJxQTFBQUJxQTFBMVExQTFBMVExQnAANrThQTFSYVExQTFCcUExUTFBMUFBQTFBMVJgADa08UExQnFBMVExQnFBMUExUTFBMUExUTFCcAA2tOFBMVJxQTFBMVJhUTFBMUExUTFBMUExUmAA0FAAAAAAAAAAAAAAAA'
-      gtk_xb7_vol_down:
-        friendly_name: "Speaker Volume Down"
-        command_on: 'JgDkAAsAC31OFCcUJxQTFRMUJxQTFBMVExQTFBMVExQnAANXTxQnFCcUExQTFSYVExQTFBMVExQTFBMVJwADV04VJhUmFRMUExQnFRMUExQTFRMUExQTFSYAA1hOFCcUJxUTFBMUJxQTFRMUExQTFRMUExQnAANYThQnFCcUExUTFCcUExQTFRMUExQTFRMUJwADWE4UJxQnFBMVExQnFBMUExUTFBMUExUTFCcAA1dOFSYVJhUTFBMUJxUTFBMUExUTFBMUExUmAANYThQnFCcUFBQTFCcUExUTFBMUExUTFBMUJwANBQAAAAA='
-      gtk_xb7_bluetooth:
-        friendly_name: "Speaker Bluetooth"
-        command_on: 'JgAIAU4UJxQTFRMUExQnFCcUJxQTFRMUExQTFScUExQTFRMUExQTFSYVExQTAAH6ThQnFBMUExUTFCcUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAfpOFCcUExQTFRMUJxQnFCcUExUTFBMUExUmFRMUExQTFRMUExQnFBMVEwAB+k4UJxQTFBMVExQnFCcUJxQTFRMUExQTFSYVExQTFBMVExQTFCcUExUTAAH5ThUnFBMUExUTFCcUJxQnFBMUExUTFBMUJxUSFRMUExUTFBMUJxQTFRMAAflOFSYVExQTFBMVJxQnFCcUExQTFRMUExQnFBMVExQTFRIVExQnFBMUEwANBQ=='
-      gtk_xb7_usb:
-        friendly_name: "Speaker USB"
-        command_on: 'JgA4AU4VJxQnFCcUExQnFBMVExQTFBMVExQTFCcUExUTFBMVExQTFCcUExUTAAH5TxQnFCcUJxQTFCcUExUTFBMUExUTFBMUJxQTFRMUExUTFBMUJxQTFRMAAflOFSYVJhUmFRMUJxQTFBMVExQTFRMUExQnFBMVExQTFBMVExQnFBMUEwAB+k4UJxQnFCcVExQnFBMUExUTFBMUExUTFCcUExQTFRMUExQTFSYVExQTAAH6ThQnFCcUJxQTFCcVExQTFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAflPFCcUJxQnFBMUJxQTFRMUExQTFRMUExQnFBMVExQTFBMVExQnFBMUEwAB+k4UJxUmFSYVExQnFBMUExUTFBMUExUTFCcUExQTFRMUExQTFSYVExQTAAIlCwANBQ=='
-      gtk_xb7_aux:
-        friendly_name: "Speaker AUX"
-        command_on: 'JgDGAE4UExUmFSYVJhUTFCcUJxQTFRMUExQTFSYAAqgPeU8UExQnFCcUJxQTFSYVJxQTFBMVExQTFCcAAzBOFRMUJxQnFCcUExUmFSYVExQTFBMVExQnAAMwThUTFCcUJxQnFBMUJxQnFBMVExQTFRMUJwADME4UExUmFSYVJhUTFCcUJxQTFRMUExQTFScAAzBOFRMUJxQnFCcUExQnFSYUFBQTFBMVExQnAAMvTxQTFSYVJhUmFRMUJxQnFBMVExQTFBMVJgANBQAA'
-      gtk_xb7_lights:
-        friendly_name: "SpeakaLite"
-        command_on: 'JgAMAVAUExQTFSYVExQnFBMUJxUSFRMUExQTFScUExQTFRMUExQTFSYVJhUTAAH5ThUTFBMUJxQTFScUExQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQnFBMAAfpOFRMUExQnFBMVJhUTFCcUExQTFRMUExQnFBMVExQTFBMVExQnFCcUEwAB91EUExUTFCcUExQnFBMVJxQTFBMVExQTFCcUExUTFBMUExUTFCcUJxQTAAH6ThQTFBMVJxQTFCcUExUmFRMUExQTFRMUJxQTFBMVExQTFBMVJxQnFBMAAfpOFBMUExUmFRMUJxQTFCcUFBQTFBMVExQnFBMUExUTFBMUExUmFSYVEwAJtQ0ADQUAAAAAAAAAAAAAAAA='
-        command_off: 'JgAMAVAUExQTFSYVExQnFBMUJxUSFRMUExQTFScUExQTFRMUExQTFSYVJhUTAAH5ThUTFBMUJxQTFScUExQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQnFBMAAfpOFRMUExQnFBMVJhUTFCcUExQTFRMUExQnFBMVExQTFBMVExQnFCcUEwAB91EUExUTFCcUExQnFBMVJxQTFBMVExQTFCcUExUTFBMUExUTFCcUJxQTAAH6ThQTFBMVJxQTFCcUExUmFRMUExQTFRMUJxQTFBMVExQTFBMVJxQnFBMAAfpOFBMUExUmFRMUJxQTFCcUFBQTFBMVExQnFBMUExUTFBMUExUmFSYVEwAJtQ0ADQUAAAAAAAAAAAAAAAA='
-      gtk_xb7_lights_rave:
-        friendly_name: "Rave Mode"
-        command_on: 'JgCMAU4UExUTFBMUFBQTFCcUJxQTFRMUExQTFSYVExQTFBMVExQTFCcVExQTAAIhThQTFRMUExUTFBMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxUTFBMAAiFOFRMUExQTFRMUExQnFCcUFBQTFBMVExQnFBMUExUTFBMUExUmFRMUEwACIU4VExQTFBMVExQTFCcUJxQUFBMUExQTFSYVExQTFBMVExQTFCcVExQTAAIhThQTFRMUExQUFBMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAh9QFBQUExQTFBMVExQnFCcVEhUTFBMUExUmFRMUExQTFRMUExUmFRMUEwACIU4VExQTFBMVExQTFCcUJxQTFRMUExQTFScUExQTFRMUExQTFSYVExQTAAIhThUTFBMUExUTFBMUJxQnFRMUExQTFRMUJxQTFBMVExQTFBMVJhUTFBMAAiFOFRMUExQTFRMUExQnFSYVExQTFBMVExQnFBMUExUTFBMUExUmFRMUEwANBQAAAAAAAAAAAAAAAA=='
-      gtk_xb7_lights_chill:
-        friendly_name: "Chill Mode"
-        command_on: 'JgAIAU4VJhUTFBMUExUTFCcUJxQTFRIVExQTFCcVExQTFBMVExQTFCcUExUTAAINThUmFRMUExQTFRMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQTFRMAAg1OFSYVExQTFBMVExQnFCcUExUTFBMUExUmFRMUExQTFRMUExQnFBMVEwACDU4VJhUTFBMUExUTFCcUJxQTFBQUExQTFSYVExQTFBMVExQTFCcUExUTAAINThUmFRMUExQTFRMUJxQnFBMVExQTFBMVJhUTFBMUExUTFBMUJxQUFBMAAg1OFSYVExQWEhMUExQnFCcUExUTFBYRExUmFRMUExQTFRMUExQnFRIVEwANBQ=='
-      gtk_xb7_extra_bass:
-        friendly_name: "Extra Bass"
-        command_on: 'JgASAU4VJhUTFCcUJxQTFBQUJxQTFBMVExQTFCcUExUTFCcAArtPFCcUExQnFCcUExUTFCcUExQTFRMUExQnFBQUExQnAAK8ThQnFBMVJhUmFRMUExQnFBMVExQTFBMVJxQTFBMVJgACvE4UJxUTFCcUJxQTFBMVJhUTFBMUExUTFCcUExQTFSYAArxOFSYVExQnFCcUExUTFCcUExQTFRMUExQnFBMVExQnOgsAAndOFCcUExQnFCcVExQTFCcUExUTFBMUExUmFRMUExQnAAK8ThQnFBMVJhUmFRMUExQnFBMVExQTFBMVJxQTFBMVJgACvE4VJhUTFCcUJxQTFBMVJhUTFBMUExUTFCcUExUSFScADQUAAAAAAAA='
-        command_off: 'JgASAU4VJhUTFCcUJxQTFBQUJxQTFBMVExQTFCcUExUTFCcAArtPFCcUExQnFCcUExUTFCcUExQTFRMUExQnFBQUExQnAAK8ThQnFBMVJhUmFRMUExQnFBMVExQTFBMVJxQTFBMVJgACvE4UJxUTFCcUJxQTFBMVJhUTFBMUExUTFCcUExQTFSYAArxOFSYVExQnFCcUExUTFCcUExQTFRMUExQnFBMVExQnOgsAAndOFCcUExQnFCcVExQTFCcUExUTFBMUExUmFRMUExQnAAK8ThQnFBMVJhUmFRMUExQnFBMVExQTFBMVJxQTFBMVJgACvE4VJhUTFCcUJxQTFBMVJhUTFBMUExUTFCcUExUSFScADQUAAAAAAAA='
-light:
-  - platform: flux_led
-    # automatic_add: True
-    devices:
-      192.168.1.235:
-        name: "desk light"
-        mode: "rgb"
-      192.168.1.245:
-        name: "room light"
-        mode: "rgb"
-      # 192.168.1.247:
-      #   name: "bot light"
-      #   mode: "rgb"
-      #   # protocol: 'ledenet'
-      # 192.168.1.109:
-      #   name: "top light"
-      #   mode: "rgb"
-        # protocol: 'ledenet'
-  - platform: group
-    name: "mood"
-    entities:
-      - light.desk_light
-      - light.room_light
-      - light.lifx_d073d528a0be
-      # - light.top_light
-      # - light.bot_light
-  # - platform: group
-  #   name: "bed lights"
-  #   entities:
-  #     - light.top_light
-  #     - light.bot_light
-  ####################
-  # Sensor Node MQTT
-  ####################
-  # - platform: mqtt_json  
-  #   name: "sensornode1_rgb"  
-  #   state_topic: "cyfi/sensornode1"  
-  #   command_topic: "cyfi/sensornode1/set"  
-  #   brightness: true  
-  #   flash: true  
-  #   rgb: true  
-  #   optimistic: false  
-  #   qos: 0 
-  # - platform: mqtt_json  
-  #   name: "sensornode2_rgb"  
-  #   state_topic: "cyfi/sensornode2"  
-  #   command_topic: "cyfi/sensornode2/set"  
-  #   brightness: true  
-  #   flash: true  
-  #   rgb: true  
-  #   optimistic: false  
-  #   qos: 0 
-
-sensor:
-  ###################  
-  # Sensor Node - 1 # LIVING_ROOM
-  ###################
-  # - platform: mqtt
-  #   state_topic: "cyfi/sensornode1"
-  #   name: "sensornode1_temperature"
-  #   unit_of_measurement: "°C"
-  #   value_template: '{{ value_json.temperature | round(1) }}'
-  # - platform: mqtt  
-  #   state_topic: "cyfi/sensornode1"  
-  #   name: "sensornode1_humidity"  
-  #   unit_of_measurement: "%"  
-  #   value_template: '{{ value_json.humidity | round(1) }}'  
-  # - platform: mqtt  
-  #   state_topic: "cyfi/sensornode1"  
-  #   name: "sensornode1_LDR"
-  #   # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
-  #   unit_of_measurement: "Lux"  
-  #   value_template: '{{ value_json.ldr }}'
-  # - platform: mqtt  
-  #   state_topic: "cyfi/sensornode1"  
-  #   name: "sensornode1_motion"    
-  #   value_template: '{{ value_json.motion }}'  
-  # - platform: mqtt
-  #   state_topic: "cyfi/sensornode1"
-  #   name: "sensornode1_feelslike"
-  #   unit_of_measurement: "°C"
-  #   value_template: '{{ value_json.heatIndex | round(1) }}'
-  ###################  
-  # Sensor Node - 2 # BEDROOM
-  ###################
-  # - platform: mqtt
-  #   state_topic: "cyfi/sensornode2"
-  #   name: "sensornode2_temperature"
-  #   unit_of_measurement: "°C"
-  #   value_template: '{{ value_json.temperature | round(1) }}'
-  # - platform: mqtt  
-  #   state_topic: "cyfi/sensornode2"  
-  #   name: "sensornode2_humidity"  
-  #   unit_of_measurement: "%"  
-  #   value_template: '{{ value_json.humidity | round(1) }}'  
-  # - platform: mqtt  
-  #   state_topic: "cyfi/sensornode2"  
-  #   name: "sensornode2_LDR"
-  #   # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
-  #   unit_of_measurement: "Lux"  
-  #   value_template: '{{ value_json.ldr }}'
-  # - platform: mqtt  
-  #   state_topic: "cyfi/sensornode2"  
-  #   name: "sensornode2_motion"    
-  #   value_template: '{{ value_json.motion }}'
-  # - platform: mqtt
-  #   state_topic: "cyfi/sensornode2"
-  #   name: "sensornode2_feelslike"
-  #   unit_of_measurement: "°C"
-  #   value_template: '{{ value_json.heatIndex | round(1) }}'
-  #################### 
-  # SonOff - S31 - 1 # (LIGHT)
-  ####################
-  - platform: mqtt
-    state_topic: "tele/sonoff_s31_1/SENSOR"
-    name: "sonoff_s31_1_sensor_voltage"
-    unit_of_measurement: "V"
-    value_template: "{{value_json['ENERGY'].Voltage }}"
-  - platform: mqtt
-    state_topic: "tele/sonoff_s31_1/SENSOR"
-    name: "sonoff_s31_1_sensor_current"
-    unit_of_measurement: "A"
-    value_template: "{{value_json['ENERGY'].Current }}"
-  - platform: mqtt
-    state_topic: "tele/sonoff_s31_1/SENSOR"
-    name: "sonoff_s31_1_sensor_power"
-    unit_of_measurement: "W"
-    value_template: "{{value_json['ENERGY'].Power }}"
-  - platform: mqtt
-    state_topic: "tele/sonoff_s31_1/SENSOR"
-    name: "sonoff_s31_1_sensor_today"
-    unit_of_measurement: "kWh"
-    value_template: "{{value_json['ENERGY'].Today }}"
-  - platform: mqtt
-    state_topic: "tele/sonoff_s31_1/SENSOR"
-    name: "sonoff_s31_1_sensor_total"
-    unit_of_measurement: "kWh"
-    value_template: "{{value_json['ENERGY'].Total }}"
-  #################### 
-  # SonOff - S31 - 2 #  
-  ####################
-  - platform: mqtt
-    state_topic: "tele/sonoff_s31_2/SENSOR"
-    name: "sonoff_s31_2_sensor_voltage"
-    unit_of_measurement: "V"
-    value_template: "{{value_json['ENERGY'].Voltage }}"
-  - platform: mqtt
-    state_topic: "tele/sonoff_s31_2/SENSOR"
-    name: "sonoff_s31_2_sensor_current"
-    unit_of_measurement: "A"
-    value_template: "{{value_json['ENERGY'].Current }}"
-  - platform: mqtt
-    state_topic: "tele/sonoff_s31_2/SENSOR"
-    name: "sonoff_s31_2_sensor_power"
-    unit_of_measurement: "W"
-    value_template: "{{value_json['ENERGY'].Power }}"
-  - platform: mqtt
-    state_topic: "tele/sonoff_s31_2/SENSOR"
-    name: "sonoff_s31_2_sensor_today"
-    unit_of_measurement: "kWh"
-    value_template: "{{value_json['ENERGY'].Today }}"
-  - platform: mqtt
-    state_topic: "tele/sonoff_s31_2/SENSOR"
-    name: "sonoff_s31_2_sensor_total"
-    unit_of_measurement: "kWh"
-    value_template: "{{value_json['ENERGY'].Total }}"
-  #################  
-  # NanoPi Status  
-  #################
-  - platform: command_line
-    name: nanopi_temps
-    scan_interval: 10    
-    command: "cat /sys/class/thermal/thermal_zone0/temp"
-    unit_of_measurement: "°C"
-    value_template: '{{ value | multiply(0.001) | round(1) }}'
-  - platform: command_line
-    scan_interval: 10 
-    name: nanopi_memory_usage
-    command: free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }'
-    value_template: '{{ value }}'
-  - platform: command_line
-    name: nanopi_disk_usage
-    command: df -h | awk '$NF=="/"{printf "%.2f/%.2fGB (%s)\n", $3,$2,$5}'
-    value_template: '{{ value }}'
-  - platform: command_line
-    name: nanopi_network_usage
-    scan_interval: 3    
-    command: "bash /home/hassio/eth0_network_usage.sh"
-    value_template: '{{ value }}'
-  - platform: command_line
-    name: nanopi_cpu_speed
-    scan_interval: 3    
-    command: cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
-    # command: cat /_____/____/homeassistant/cpu_freq_report.txt
-    unit_of_measurement: "GHz"
-    value_template: '{{ value | multiply(0.00000249999) | round(2) }}' # fix CPU Freq readout for NanoPi Neo Plus2
-  - platform: command_line
-    name: nanopi_cpu_usage
-    scan_interval: 5    
-    # command: "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage "%"}'"
-    command: top -bn1 | grep load | awk '{printf "%.2f\n", $(NF-2)}'
-    value_template: '{{ value }}'
-  - platform: command_line
-    name: server_uptime
-    # command: uptime | awk -F, '{sub(".*up ",x,$1);print $1}'
-    command: "python /home/hassio/uptime.py"
-  # - platform: command_line
-  - platform: uptime
-    name: ha_uptime
-    unit_of_measurement: hours
-    # command: /usr/sbin/service hass-daemon status | awk 'NR==3{print $9" " $10}'
-    # value_template: '{{ value }}'    
-  - platform: time_date
-    display_options:
-      - time
-    ###############################
-    ## Intenet Sensor
-    ###############################
-  - platform: command_line
-    scan_interval: 7 
-    name: is_internet_up
-    command: ping -c 1 1.1.1.1 | grep "1 received" | wc -l
-    value_template: '{{ value }}'    
-  - platform: template
-    sensors:
-      internet_status:
-        friendly_name: "Internet"
-        value_template: >-
-          {% if is_state('sensor.is_internet_up', '1') %}
-            Connected
-          {% else %}
-            Down
-          {% endif %}
-
-    #################  
-    # Sensor Nodes
-    #################
-  # - platform: template    
-  #   sensors:
-  #     sensornode1_motion_status:
-  #       value_template: >-
-  #         {% if is_state('sensor.sensornode1_motion', 'standby') %}
-  #           Clear
-  #         {% else %}
-  #           Detected
-  #         {% endif %}        
-  #       icon_template: >-
-  #         {% if is_state("sensor.sensornode1_motion", "standby") %}
-  #         mdi:walk
-  #         {% else %}
-  #         mdi:run-fast
-  #         {% endif %}
-  # - platform: template
-  #   sensors:
-  #     sensornode2_motion_status:
-  #       value_template: >-
-  #         {% if is_state('sensor.sensornode1_motion', 'standby') %}
-  #           Clear
-  #         {% else %}
-  #           Detected
-  #         {% endif %}        
-  #       icon_template: >-
-  #         {% if is_state("sensor.sensornode1_motion", "standby") %}
-  #         mdi:walk
-  #         {% else %}
-  #         mdi:run-fast
-  #         {% endif %}
+switch: !include switches.yaml
+light: !include lights.yaml
+sensor: !include sensors.yaml
 
 # OTHER DEVICES
 cast:
@@ -570,16 +192,20 @@ intent_script:
           # - "{% if color == 'blue' %}blue{% endif %}"
           # - "{% if color == 'purple' %}purple{% endif %}"
 
-notify:
-  name: LM2216
-  platform: lametric
-  # icon: a25544
-  # lifetime: 7
-  # cycles: 1
-  # priority: warning
 #############################################
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
 zone: !include zones.yaml
+system_health:
+custom_updater:
+  card_urls:
+    - https://raw.githubusercontent.com/kalkih/mini-graph-card/master/tracker.json
+    - https://raw.githubusercontent.com/kalkih/mini-media-player/master/tracker.json
+weblink:
+  entities:
+    - name: Release Log
+      url: https://github.com/home-assistant/home-assistant/releases/latest
+# updater:
+#   reporting: false
