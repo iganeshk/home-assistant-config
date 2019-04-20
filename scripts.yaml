@@ -1,3 +1,20 @@
+####################
+##### HASS
+####################
+hass_restart:
+  alias: Restart Home Assistant
+  sequence:
+    # - service: homeassistant.restart
+    - service: shell_command.restart_hass
+
+upgrade_hass:
+  alias: Upgrade Hass
+  sequence:
+    - service: shell_command.shell_upgrade_hass
+
+####################
+##### SWITCHES
+####################
 switch_controller:
   alias: "Switch Controller"
   sequence:

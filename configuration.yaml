@@ -83,7 +83,16 @@ notify:
   #   track_new_devices: yes
 # Enables support for tracking state changes over time
 history:
-
+recorder:
+  purge_keep_days: 7
+  db_url: !secret ha_db_url
+  exclude:
+    domains:
+      - automation
+    entities:
+      - sun.sun # Don't record sun data
+      # - sensor.last_boot # Comes from 'systemmonitor' sensor platform
+      # - sensor.date
 # View all events in a logbook
 # logbook:
 
@@ -133,6 +142,8 @@ shell_command:
   ##shutdown_apex: "net rpc shutdown -f -t time -C 'message' -U username%password -I ip_address"
   shutdown_apex: !secret cobalt-60-rpc-down
   lock_apex: !secret cobalt-60-rpc-lock
+  shell_upgrade_hass: !secret ha_upgrade_sh 
+  restart_hass: !secret restart_hass
 
 switch: !include switches.yaml
 light: !include lights.yaml

@@ -1,5 +1,6 @@
 slate:
-    background-image: 'center / cover no-repeat url("/local/dark-pattern.jpg") fixed'    
+    background-image: 'center / cover no-repeat url("/local/backgrounds/khyzyl-saleem-driftitweb.jpg") fixed'
+    # background-image: 'center / cover no-repeat url("/local/dark-pattern.jpg") fixed'    
     # Main colors
     primary-color: '#2980b9'
     accent-color: '#b58e31'

@@ -1,6 +1,8 @@
 clear-dark:
   # Background image
-  background-image: 'center / cover no-repeat url("/local/dark-pattern.jpg") fixed'
+  background-image: 'center / cover no-repeat url("/local/backgrounds/abyss.jpg") fixed'
+  # background-image: 'center / cover no-repeat url("/local/backgrounds/khyzyl-saleem-driftitweb.jpg") fixed'
+  # background-image: 'center / cover no-repeat url("/local/backgrounds/dark-pattern.jpg") fixed'
 
   # Colors
   text-color: '#DADADB'                                                           # Grey text

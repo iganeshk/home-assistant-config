@@ -1,61 +1,5 @@
-###################  
-# Sensor Node - 1 # LIVING_ROOM
-###################
-# - platform: mqtt
-#   state_topic: "cyfi/sensornode1"
-#   name: "sensornode1_temperature"
-#   unit_of_measurement: "°C"
-#   value_template: '{{ value_json.temperature | round(1) }}'
-# - platform: mqtt  
-#   state_topic: "cyfi/sensornode1"  
-#   name: "sensornode1_humidity"  
-#   unit_of_measurement: "%"  
-#   value_template: '{{ value_json.humidity | round(1) }}'  
-# - platform: mqtt  
-#   state_topic: "cyfi/sensornode1"  
-#   name: "sensornode1_LDR"
-#   # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
-#   unit_of_measurement: "Lux"  
-#   value_template: '{{ value_json.ldr }}'
-# - platform: mqtt  
-#   state_topic: "cyfi/sensornode1"  
-#   name: "sensornode1_motion"    
-#   value_template: '{{ value_json.motion }}'  
-# - platform: mqtt
-#   state_topic: "cyfi/sensornode1"
-#   name: "sensornode1_feelslike"
-#   unit_of_measurement: "°C"
-#   value_template: '{{ value_json.heatIndex | round(1) }}'
-###################  
-# Sensor Node - 2 # BEDROOM
-###################
-# - platform: mqtt
-#   state_topic: "cyfi/sensornode2"
-#   name: "sensornode2_temperature"
-#   unit_of_measurement: "°C"
-#   value_template: '{{ value_json.temperature | round(1) }}'
-# - platform: mqtt  
-#   state_topic: "cyfi/sensornode2"  
-#   name: "sensornode2_humidity"  
-#   unit_of_measurement: "%"  
-#   value_template: '{{ value_json.humidity | round(1) }}'  
-# - platform: mqtt  
-#   state_topic: "cyfi/sensornode2"  
-#   name: "sensornode2_LDR"
-#   # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
-#   unit_of_measurement: "Lux"  
-#   value_template: '{{ value_json.ldr }}'
-# - platform: mqtt  
-#   state_topic: "cyfi/sensornode2"  
-#   name: "sensornode2_motion"    
-#   value_template: '{{ value_json.motion }}'
-# - platform: mqtt
-#   state_topic: "cyfi/sensornode2"
-#   name: "sensornode2_feelslike"
-#   unit_of_measurement: "°C"
-#   value_template: '{{ value_json.heatIndex | round(1) }}'
 #################### 
-# SonOff - S31 - 1 # (LIGHT)
+# SonOff - S31 - 1 #
 ####################
 - platform: mqtt
   state_topic: "tele/sonoff_s31_1/SENSOR"
@@ -130,12 +74,12 @@
   value_template: '{{ value }}'
 - platform: command_line
   name: nanopi_network_usage
-  scan_interval: 3    
+  scan_interval: 5
   command: "bash /home/hassio/eth0_network_usage.sh"
   value_template: '{{ value }}'
 - platform: command_line
   name: nanopi_cpu_speed
-  scan_interval: 3    
+  scan_interval: 5
   command: cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
   # command: cat /_____/____/homeassistant/cpu_freq_report.txt
   unit_of_measurement: "GHz"
@@ -148,7 +92,7 @@
   # command: top -bn1 | grep load | awk '{printf "%.2f\n", $(NF-2)}'
   value_template: '{{ value }}'
 - platform: command_line
-  name: server_uptime
+  name: nanopi_uptime
   # command: uptime | awk -F, '{sub(".*up ",x,$1);print $1}'
   command: "python /home/hassio/uptime.py"
 # - platform: command_line
@@ -160,24 +104,126 @@
 - platform: time_date
   display_options:
     - time
+
+## HOME ASSISTANT VERSION SENSOR
+- platform: version
+
   ###############################
-  ## NETWORK SENSORS
+  ## TEMPLATE SENSORS
   ###############################
+
+- platform: template
+  sensors:       
+    internet_status:
+      friendly_name: "Internet Status"
+      value_template: >-
+        {% if is_state('sensor.is_internet_up', '1') %}
+          Online
+        {% else %}
+          Offline
+        {% endif %}
+      icon_template: >-
+        {% if is_state('sensor.is_internet_up', '1') %}
+          mdi:server-network
+        {% else %}
+          mdi:server-network-off
+        {% endif %}        
+    ha_update_found:
+      friendly_name: "HA Updates"
+      value_template: >-
+        {% if states('sensor.ha_latest_version') > states('sensor.current_version') %}
+          true
+        {% else %}
+          false
+        {% endif %}
+      icon_template: >-
+        {% if (states('sensor.ha_latest_version')) > (states('sensor.current_version')) %}
+          mdi:home-plus
+        {% else %}
+          mdi:home-minus
+        {% endif %}
+# ## SENSOR FOR CONDITIONAL CARD ( CUSTOM COMPONENT AND CARD VERSIONS )
+    # custom_update_available:
+    #   value_template: >
+    #     {%-set card=states('sensor.custom_card_tracker')-%}
+    #     {%-set component=states('sensor.custom_component_tracker')-%}
+    #     {%- if card|int != 0|int or component|int != 0|int -%}on{%-else-%}off{%-endif-%}
+
+  ###############################
+  ## ROUTER/NETWORK SENSORS
+  ###############################
+
+# - platform: command_line
+#   scan_interval: 14400
+#   name: openwrt_version
+#   command: curl -s $(hass_secrets 3200acm_portal) | grep -Po 'OpenWrt SNAPSHOT \K.*'
+#   value_template: '{{ value }}'
+#   command_timeout: 5
+
+- platform: command_line
+  scan_interval: 86400
+  name: latest_openwrt_version
+  command: curl -s https://downloads.openwrt.org/snapshots/targets/mvebu/cortexa9/openwrt-mvebu-cortexa9.manifest | grep -Po 'base-files - \K.*' | sed 's/^....//'
+  value_template: '{{ value }}'
+  command_timeout: 5
+
 - platform: command_line
   scan_interval: 5
   name: is_internet_up
-  command: "ping -c 1 1.1.1.1 | grep '1 received' | wc -l"
+  command: ping -c 1 1.1.1.1 | grep '1 received' | wc -l
   value_template: '{{ value }}'
-  command_timeout: 3
+  command_timeout: 5
+
 - platform: command_line
   name: wan_ip
-  command: "curl https://icanhazip.com -4"
-# - platform: rest
-#   resource: https://api.ipify.org/?format=json
-  #resource: http://ip.jsontest.com
-#   value_template: '{{ value_json.ip }}'  
+  command: curl https://icanhazip.com -4
   value_template: '{{ value }}'
-  scan_interval: 14400
+  scan_interval: 3600
+
+- platform: rest
+  resource: !secret 3200acm_api
+  name: 3200acm_cpu
+  value_template: '{{ value_json["CPU Load"] }}'
+
+- platform: rest
+  resource: !secret 3200acm_api
+  name: 3200acm_mem
+  value_template: '{{ value_json["Memory Usage"] }}'
+
+- platform: rest
+  resource: !secret 3200acm_api
+  name: 3200acm_disk
+  value_template: '{{ value_json["Disk Usage"] }}'
+
+- platform: rest
+  resource: !secret 3200acm_api
+  name: 3200acm_openwrt_rel
+  value_template: '{{ value_json["OPENWRT_RELEASE"] }}'
+
+- platform: rest
+  resource: !secret 3200acm_api
+  name: 3200acm_openwrt_ver
+  value_template: '{{ value_json["OPENWRT_VERSION"] }}'
+
+- platform: rest
+  resource: !secret 3200acm_api
+  name: 3200acm_uptime
+  value_template: '{{ value_json["Uptime"] }}'
+
+- platform: rest
+  resource: !secret 3200acm_api
+  name: 3200acm_domain1
+  value_template: !secret 3200acm-domain1
+
+- platform: rest
+  resource: !secret 3200acm_api
+  name: 3200acm_domain2
+  value_template: !secret 3200acm-domain2
+
+
+  ###############################
+  ## Home Assistant
+  ###############################
 - platform: command_line
   name: ha_db
   command: !secret ha_db_size
@@ -193,50 +239,67 @@
     Accept: application/vnd.github.v3+json
     Content-Type: application/json
     User-Agent: Home Assistant REST sensor
-  scan_interval: 14400
-- platform: template
-  sensors:
-    internet_status:
-      friendly_name: "Internet Status"
-      value_template: >-
-        {% if is_state('sensor.is_internet_up', '1') %}
-          1
-        {% else %}
-          0
-        {% endif %}          
-    internet_status_card:
-      friendly_name: "Internet Status Card"
-      value_template: >-
-        {% if is_state('sensor.is_internet_up', '1') %}
-          Online
-        {% else %}
-          Offline
-        {% endif %}
-    ha_update_found:
-      friendly_name: "HA Updates"
-      value_template: >-
-        {% if states('sensor.ha_latest_version') > states('sensor.current_version') %}
-          {{ states('sensor.ha_latest_version') }}
-        {% else %}
-          {{ states('sensor.current_version') }}
-        {% endif %}
-      icon_template: >-
-        {% if (states('sensor.ha_latest_version')) > (states('sensor.current_version')) %}
-          mdi:home-plus
-        {% else %}
-          mdi:home-minus
-        {% endif %}
-###### SENSOR FOR CONDITIONAL CARD ( CUSTOM COMPONENT AND CARD VERSIONS )
-    custom_update_available:
-      value_template: >
-        {%-set card=states('sensor.custom_card_tracker')-%}
-        {%-set component=states('sensor.custom_component_tracker')-%}
-        {%- if card|int != 0|int or component|int != 0|int -%}on{%-else-%}off{%-endif-%}        
-## HOME ASSISTANT VERSION SENSOR
-- platform: version
+  scan_interval: 86400
+
+###################  
+# Sensor Node - 1 # LIVING_ROOM
+###################
+# - platform: mqtt
+#   state_topic: "cyfi/sensornode1"
+#   name: "sensornode1_temperature"
+#   unit_of_measurement: "°C"
+#   value_template: '{{ value_json.temperature | round(1) }}'
+# - platform: mqtt  
+#   state_topic: "cyfi/sensornode1"  
+#   name: "sensornode1_humidity"  
+#   unit_of_measurement: "%"  
+#   value_template: '{{ value_json.humidity | round(1) }}'  
+# - platform: mqtt  
+#   state_topic: "cyfi/sensornode1"  
+#   name: "sensornode1_LDR"
+#   # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
+#   unit_of_measurement: "Lux"  
+#   value_template: '{{ value_json.ldr }}'
+# - platform: mqtt  
+#   state_topic: "cyfi/sensornode1"  
+#   name: "sensornode1_motion"    
+#   value_template: '{{ value_json.motion }}'  
+# - platform: mqtt
+#   state_topic: "cyfi/sensornode1"
+#   name: "sensornode1_feelslike"
+#   unit_of_measurement: "°C"
+#   value_template: '{{ value_json.heatIndex | round(1) }}'
+###################  
+# Sensor Node - 2 # BEDROOM
+###################
+# - platform: mqtt
+#   state_topic: "cyfi/sensornode2"
+#   name: "sensornode2_temperature"
+#   unit_of_measurement: "°C"
+#   value_template: '{{ value_json.temperature | round(1) }}'
+# - platform: mqtt  
+#   state_topic: "cyfi/sensornode2"  
+#   name: "sensornode2_humidity"  
+#   unit_of_measurement: "%"  
+#   value_template: '{{ value_json.humidity | round(1) }}'  
+# - platform: mqtt  
+#   state_topic: "cyfi/sensornode2"  
+#   name: "sensornode2_LDR"
+#   # This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
+#   unit_of_measurement: "Lux"  
+#   value_template: '{{ value_json.ldr }}'
+# - platform: mqtt  
+#   state_topic: "cyfi/sensornode2"  
+#   name: "sensornode2_motion"    
+#   value_template: '{{ value_json.motion }}'
+# - platform: mqtt
+#   state_topic: "cyfi/sensornode2"
+#   name: "sensornode2_feelslike"
+#   unit_of_measurement: "°C"
+#   value_template: '{{ value_json.heatIndex | round(1) }}'
 
   #################  
-  # Sensor Nodes
+  # Sensor Nodes Templates
   #################
 # - platform: template    
 #   sensors:

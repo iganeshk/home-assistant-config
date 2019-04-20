@@ -40,11 +40,11 @@ switch.sonoff_s20_1:
 
 switch.sonoff_s31_1:
     icon: mdi:power-settings
-    friendly_name: "Switch S31"
+    friendly_name: "Switch S31 - 1"
 
 switch.sonoff_s31_2:
     icon: mdi:flash-circle
-    friendly_name: "TV"    
+    friendly_name: "Switch S31 - 2"
 
 ##################################### INTERNET SENSOR
 
@@ -119,8 +119,7 @@ light.sensornode2_rgb:
     icon: mdi:led-outline
     friendly_name: "Test Light"    
 
-##################################### SENSORS - S31 
-# LIVING_ROOM_PLUG
+#################### S31 - MQTT Sensors
 sensor.sonoff_s31_1_sensor_voltage:
     icon: mdi:flash-auto
     friendly_name: "Voltage"  
@@ -136,7 +135,7 @@ sensor.sonoff_s31_1_sensor_today:
 sensor.sonoff_s31_1_sensor_total:
     icon: mdi:clipboard-pulse
     friendly_name: "Energy Total"
-# BEDROOM - CHARGER PLUG
+#################### S32 - MQTT Sensors
 sensor.sonoff_s31_2_sensor_voltage:
     icon: mdi:flash-auto
     friendly_name: "Voltage"  
@@ -174,9 +173,9 @@ sensor.nanopi_network_usage:
     # icon: mdi:server-network
     icon: mdi:ethernet
     friendly_name: "Network"
-sensor.server_uptime:
+sensor.nanopi_uptime:
     icon: mdi:av-timer
-    friendly_name: "Server Uptime"
+    friendly_name: "Uptime"
 
 sensor.ha_db:
     icon: mdi:database

@@ -26,9 +26,8 @@
 ## Network Architecture
 ![home-assistant-network](https://iganesh.com/ha_config/ha_network_arch.png)
 
-## Screen-Shots
+## Screenshots
 
-Dashboard
-![home-assistant-dashboard-1](https://iganesh.com/ha_config/ha_all.png?1)
+![home-assistant-dashboard-1](https://iganesh.com/ha_config/hass_lovelace_pg1.png)
 
-## To-Do's
+![home-assistant-dashboard-2](https://iganesh.com/ha_config/hass_lovelace_pg2.png)
