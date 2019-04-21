@@ -86,45 +86,7 @@ views:
 #               entity: media_player.home_speakers
 #
 
-
-#         ## WORKSTATION
-          - type: "custom:button-card"
-            name: "Workstation"          
-            color_type: label-card
-            color: var(--primary-background-color)
-            style:
-              - background-color: var(--primary-background-color)
-              - color: var(--primary-text-color)
-              - padding-top: 12px
-              - padding-bottom: 12px
-              - font-weight: bold
-              - font-size: 20px
-          - type: "custom:vertical-stack-in-card"
-            cards:
-            - type: picture-glance
-              title: "Apex"
-              state_image:
-                "on": /local/states/workstation.jpg
-                "off": /local/states/workstation_off.jpg
-              entity: switch.apex
-              entities:
-                - switch.apex
-                - switch.lock_apex
-                - light.desk_light
-            - type: entities
-              entities:
-                - entity: switch.sonoff_s31_2
-                  name: "Workstation Switch"
-                - entity: switch.sonoff_s20_1
-                  name: "Workstation Desk"
-                - entity: sensor.sonoff_s31_2_sensor_power
-                  name: "Power Draw"
-                - entity: sensor.sonoff_s31_2_sensor_current
-                  name: "Current"
-                - entity: sensor.sonoff_s31_2_sensor_today
-                  name: "Energy Used Today"
-
-#         ## MEDIA (SPEAKERS, ETC.)
+#   ## MEDIA (SPEAKERS, ETC.)
       - type: horizontal-stack
         cards:
           - type: vertical-stack
@@ -159,9 +121,64 @@ views:
                     icon: mdi:track-light
                   - entity: switch.gtk_xb7_extra_bass
                     icon: mdi:speaker-wireless
+#   ## WORKSTATION
+      - type: horizontal-stack
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: "custom:button-card"
+                name: "Workstation"          
+                color_type: label-card
+                color: var(--primary-background-color)
+                style:
+                  - background-color: var(--primary-background-color)
+                  - color: var(--primary-text-color)
+                  - padding-top: 12px
+                  - padding-bottom: 12px
+                  - font-weight: bold
+                  - font-size: 20px
+              - type: "custom:vertical-stack-in-card"
+                cards:
+                - type: picture-glance
+                  title: "Cobalt-60"
+                  state_image:
+                    "on": /local/states/workstation.jpg
+                    "off": /local/states/workstation_off.jpg
+                  entity: switch.apex
+                  entities:
+                    - switch.apex
+                    - switch.lock_apex
+                    - light.desk_light
+                - type: entities
+                  entities:
+                    - entity: sensor.cobalt_60_cpu
+                      icon: mdi:chip
+                      name: "CPU Temperature"
+                    - entity: sensor.cobalt_60_gpu
+                      icon: mdi:chip
+                      name: "GPU Temperature"
+                    - entity: sensor.cobalt_60_coolant
+                      icon: mdi:oil-temperature
+                      name: "Loop Coolant Temperature"
+                    - entity: sensor.cobalt_60_vcore
+                      icon: mdi:flash
+                      name: "CPU VCore"
+                    - entity: sensor.sonoff_s31_2_sensor_power
+                      name: "Power Draw"                     
+                    - entity: switch.sonoff_s20_1
+                      name: "Workstation Desk"
+                      icon: mdi:sign-caution
+                    - entity: switch.sonoff_s31_2
+                      name: "Workstation Switch"
+                      icon: mdi:power-socket-us
+                    - entity: sensor.sonoff_s31_2_sensor_current
+                      name: "Current"
+                    - entity: sensor.sonoff_s31_2_sensor_today
+                      name: "Energy Used Today"
 
+######################################
 #### VIEW 2: INTERNET ####
-
+######################################
   - title: System
     icon: mdi:console
     cards:
@@ -271,29 +288,32 @@ views:
               show_state: false
               show_name: false              
             - type: entities
-              entities:             
-                - entity: sensor.3200acm_cpu
+              entities:
+                - entity: sensor.linksys3200acm_cpu
                   name: "CPU Load"
                   icon: mdi:chip
-                - entity: sensor.3200acm_mem
+                - entity: sensor.linksys3200acm_cpu_temp
+                  name: "CPU Temperature"
+                  icon: mdi:thermometer-lines
+                - entity: sensor.linksys3200acm_mem
                   name: "Memory Usage"
                   icon: mdi:memory
-                - entity: sensor.3200acm_disk
+                - entity: sensor.linksys3200acm_disk
                   name: "Disk Usage"
                   icon: mdi:harddisk
-                - entity: sensor.3200acm_uptime
+                - entity: sensor.linksys3200acm_uptime
                   name: "Uptime"
                   icon: mdi:av-timer
-                - entity: sensor.3200acm_domain1
+                - entity: sensor.linksys3200acm_cert_dom2
                   name: "CYFI Cert Expires"
                   icon: mdi:certificate
-                - entity: sensor.3200acm_domain2
+                - entity: sensor.linksys3200acm_cert_dom2
                   name: "IOT Cert Expires"
                   icon: mdi:certificate
                 - entity: sensor.wan_ip
                   name: "WAN IP"
                   icon: mdi:ip-network
-                - entity: sensor.3200acm_openwrt_ver
+                - entity: sensor.linksys3200acm_openwrt_ver
                   name: "OpenWRT Version"
                   icon: mdi:layers
                 # - entity: sensor.openwrt_version

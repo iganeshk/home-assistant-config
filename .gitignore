@@ -6,13 +6,11 @@ zones.yaml
 entity_registry.yaml
 www/
 tts/
-home-assistant_v2.db
-home-assistant.log
+home-assistant_v2.*
+*.log
 .HA_VERSION
 .cloud/
 .storage/
-home-assistant_v2.db-shm
-home-assistant_v2.db-wal
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

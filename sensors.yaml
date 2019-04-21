@@ -180,47 +180,141 @@
   value_template: '{{ value }}'
   scan_interval: 3600
 
-- platform: rest
-  resource: !secret 3200acm_api
-  name: 3200acm_cpu
-  value_template: '{{ value_json["CPU Load"] }}'
+# - platform: rest
+#   resource: !secret 3200acm_api
+#   name: 3200acm_cpu
+#   value_template: '{{ value_json["CPU Load"] }}'
+
+# - platform: rest
+#   resource: !secret 3200acm_api
+#   name: 3200acm_mem
+#   value_template: '{{ value_json["Memory Usage"] }}'
+
+# - platform: rest
+#   resource: !secret 3200acm_api
+#   name: 3200acm_disk
+#   value_template: '{{ value_json["Disk Usage"] }}'
+
+# - platform: rest
+#   resource: !secret 3200acm_api
+#   name: 3200acm_openwrt_rel
+#   value_template: '{{ value_json["OPENWRT_RELEASE"] }}'
+
+# - platform: rest
+#   resource: !secret 3200acm_api
+#   name: 3200acm_openwrt_ver
+#   value_template: '{{ value_json["OPENWRT_VERSION"] }}'
+
+# - platform: rest
+#   resource: !secret 3200acm_api
+#   name: 3200acm_uptime
+#   value_template: '{{ value_json["Uptime"] }}'
+
+# - platform: rest
+#   resource: !secret 3200acm_api
+#   name: 3200acm_domain1
+#   value_template: !secret 3200acm-domain1
+
+# - platform: rest
+#   resource: !secret 3200acm_api
+#   name: 3200acm_domain2
+#   value_template: !secret 3200acm-domain2
+
+# - platform: rest
+#   resource: http://192.168.1.100:8085/json.json
+#   name: cobalt_60_hwinfo_cpu
+#     # - hwinfo.readings[24].value
+#     # - hwinfo.readings[25].value
+#     # - hwinfo.readings[26].value
+#     # - hwinfo.readings[27].value
+#   value_template: '{{ value_json["hwinfo"]["readings"][27]["value"].title() }}'
 
 - platform: rest
+  name: linksys3200acm
   resource: !secret 3200acm_api
-  name: 3200acm_mem
-  value_template: '{{ value_json["Memory Usage"] }}'
+  json_attributes:
+    - hwinfo
+    - certs
+  value_template: 'OK'
 
 - platform: rest
-  resource: !secret 3200acm_api
-  name: 3200acm_disk
-  value_template: '{{ value_json["Disk Usage"] }}'
-
-- platform: rest
-  resource: !secret 3200acm_api
-  name: 3200acm_openwrt_rel
-  value_template: '{{ value_json["OPENWRT_RELEASE"] }}'
-
-- platform: rest
-  resource: !secret 3200acm_api
-  name: 3200acm_openwrt_ver
-  value_template: '{{ value_json["OPENWRT_VERSION"] }}'
-
-- platform: rest
-  resource: !secret 3200acm_api
-  name: 3200acm_uptime
-  value_template: '{{ value_json["Uptime"] }}'
-
-- platform: rest
-  resource: !secret 3200acm_api
-  name: 3200acm_domain1
-  value_template: !secret 3200acm-domain1
-
-- platform: rest
-  resource: !secret 3200acm_api
-  name: 3200acm_domain2
-  value_template: !secret 3200acm-domain2
+  name: cobalt_60_hwinfo
+  resource: !secret cobalt-60-hwinfo
+  json_attributes:
+    - hwinfo
+  value_template: 'OK'
 
 
+- platform: template
+  sensors:
+###########################
+# # WORKSTATION SENSORS (JSON REST API)
+###########################
+    cobalt_60_cpu:
+      value_template: '{{ states.sensor.cobalt_60_hwinfo.attributes["hwinfo"]["readings"][27]["value"] }}'
+      device_class: temperature
+      unit_of_measurement: '°C'
+    cobalt_60_gpu:
+      value_template: '{{ states.sensor.cobalt_60_hwinfo.attributes["hwinfo"]["readings"][26]["value"] }}'
+      device_class: temperature
+      unit_of_measurement: '°C'
+    cobalt_60_vcore:
+      value_template: '{{ states.sensor.cobalt_60_hwinfo.attributes["hwinfo"]["readings"][25]["value"] | round(2)}}'
+      device_class: battery
+      unit_of_measurement: 'V'
+    cobalt_60_coolant:
+      value_template: '{{ states.sensor.cobalt_60_hwinfo.attributes["hwinfo"]["readings"][24]["value"] }}'
+      device_class: temperature
+      unit_of_measurement: '°C'
+###########################
+# # ROUTER SENSORS (JSON REST API)
+###########################
+    linksys3200acm_cpu:
+      value_template: '{{ states.sensor.linksys3200acm.attributes["hwinfo"]["cpu_load"] }}'
+      friendly_name: "CPU Load"
+    linksys3200acm_cpu_temp:
+      value_template: '{{ states.sensor.linksys3200acm.attributes["hwinfo"]["cpu_temperature"] }}'
+      device_class: temperature
+      friendly_name: "CPU Temperature"      
+      unit_of_measurement: '°C'      
+    linksys3200acm_mem:
+      value_template: '{{ states.sensor.linksys3200acm.attributes["hwinfo"]["mem_usage"] }}'
+      friendly_name: "Memory"
+    linksys3200acm_disk:
+      value_template: '{{ states.sensor.linksys3200acm.attributes["hwinfo"]["disk_usage"] }}'
+      friendly_name: "Disk Usage"
+    linksys3200acm_uptime:
+      value_template: '{{ states.sensor.linksys3200acm.attributes["hwinfo"]["uptime"] }}'
+      friendly_name: "Uptime"
+    linksys3200acm_openwrt_ver:
+      value_template: '{{ states.sensor.linksys3200acm.attributes["hwinfo"]["openwrt_version"] }}'
+      friendly_name: "OpenWRT Version"
+    linksys3200acm_openwrt_rel:
+      value_template: '{{ states.sensor.linksys3200acm.attributes["hwinfo"]["openwrt_release"] }}'
+      friendly_name: "OpenWRT Release"
+    linksys3200acm_cert_dom1:
+      value_template: '{{ states.sensor.linksys3200acm.attributes["certs"]["cyfi"] }}'
+      friendly_name: "CYFI Cert Expires"
+    linksys3200acm_cert_dom2:
+      value_template: '{{ states.sensor.linksys3200acm.attributes["certs"]["iot"] }}'
+      friendly_name: "IOT Cert Expiries"
+
+# - platform: rest
+#   resource: http://192.168.1.100:8085/json.json
+#   name: cobalt_60_hwinfo
+#   json_attributes:
+#     - hwinfo
+#     # - hwinfo.readings[24].value
+#     # - hwinfo.readings[25].value
+#     # - hwinfo.readings[26].value
+#     # - hwinfo.readings[27].value
+#   value_template: '{{ value_json["hwinfo"]["readings"][27].title() }}'
+# - platform: template
+#   sensors:
+#     cobalt_60_cpu:
+#       value_template: '{{ states.sensor.cobalt_60_hwinfo.attributes.readings[27]["value"].title() }}'
+#       # entity_picture_template: '{{ "http://openweathermap.org/img/w/"+states.sensor.owm_report.attributes.weather[0]["icon"].lower()+".png" }}'
+#       entity_id: sensor.cobalt_60_hwinfo
   ###############################
   ## Home Assistant
   ###############################
