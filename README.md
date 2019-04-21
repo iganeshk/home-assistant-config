@@ -28,6 +28,6 @@
 
 ## Screenshots
 
-![home-assistant-dashboard-1](https://iganesh.com/ha_config/hass_lovelace_pg1.png?v1)
+![home-assistant-dashboard-1](https://iganesh.com/ha_config/hass_lovelace_pg1.png?v3)
 
-![home-assistant-dashboard-2](https://iganesh.com/ha_config/hass_lovelace_pg2.png?v2)
+![home-assistant-dashboard-2](https://iganesh.com/ha_config/hass_lovelace_pg2.png?v3)
