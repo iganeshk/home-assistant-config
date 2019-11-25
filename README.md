@@ -24,7 +24,7 @@
 * [OwnTracks App](http://owntracks.org) - Mobile Device Tracking
 
 ## Network Architecture
-![home-assistant-network](https://iganesh.com/ha_config/ha_network_arch.png)
+![home-assistant-network](https://iganesh.com/ha_config/ha_network_arch_1.png)
 
 ## Screenshots
 
